@@ -1,4 +1,8 @@
-USE NBA_DATA;
+CREATE DATABASE NBA;
+USE NBA;
+
+SET FOREIGN_KEY_CHECKS=1;
+
 
 # Teams
 CREATE TABLE teams(
@@ -14,14 +18,19 @@ CREATE TABLE teams(
     PRIMARY KEY (TEAM_ID)
 );
 
-
-# player
-CREATE TABLE player(PLAYER_NAME varchar(20), TEAM_ID varchar(12), PLAYER_ID varchar(20), SEASON varchar(20),
+# Player
+CREATE TABLE player(
+    PLAYER_NAME varchar(50),
+    TEAM_ID varchar(12),
+    PLAYER_ID varchar(20),
+    SEASON varchar(20),
 PRIMARY KEY(PLAYER_ID, TEAM_ID, SEASON),
 FOREIGN KEY (TEAM_ID) REFERENCES teams(TEAM_ID));
 
+SELECT * FROM player;
 
-# games
+
+# Games
 CREATE TABLE games(
     GAME_DATE_EST varchar(11),
     GAME_ID varchar(10),
@@ -47,6 +56,7 @@ CREATE TABLE games(
     FOREIGN KEY (VISITOR_TEAM_ID) REFERENCES teams(TEAM_ID)
 );
 
+
 # Ranking
 CREATE TABLE ranking(
     TEAM_ID varchar(12),
@@ -67,12 +77,70 @@ CREATE TABLE ranking(
 );
 
 # games details
-CREATE TABLE games_details(GAME_ID varchar(12), TEAM_ID varchar(10), TEAM_ABBREVIATION varchar(5), PLAYER_ID varchar(20),
-PLAYER_NAME varchar(50), START_POSITION	varchar(1), MIN varchar(50), FGM decimal(3,1), FGA decimal(3,1), FG_PCT decimal(4,3),
-FG3M decimal(3,1), FG3A decimal(3,1), FG3_PCT decimal(4,3), FTM decimal(3,1), FTA decimal(3,1), FT_PCT decimal(4,3), OREB int,
-DREB int,REB int, AST int,	STL int, BLK int, T_O int, PF int, PTS int, PLUS_MINUS int,
-FOREIGN KEY (TEAM_ID) REFERENCES teams(TEAM_ID), FOREIGN KEY (GAME_ID) REFERENCES games(GAME_ID)
+CREATE TABLE games_details(
+    GAME_ID varchar(12),
+    TEAM_ID varchar(10),
+    TEAM_ABBREVIATION varchar(5),
+    PLAYER_ID varchar(20),
+    PLAYER_NAME varchar(50),
+    START_POSITION  varchar(1),
+    MIN varchar(50),
+    FGM decimal(3,1),
+    FGA decimal(3,1),
+    FG_PCT decimal(4,3),
+    FG3M decimal(3,1),
+    FG3A decimal(3,1),
+    FG3_PCT decimal(4,3),
+    FTM decimal(3,1),
+    FTA decimal(3,1),
+    FT_PCT decimal(4,3),
+    OREB int,
+    DREB int,
+    REB int,
+    AST int,
+    STL int,
+    BLK int,
+    T_O int,
+    PF int,
+    PTS int,
+    PLUS_MINUS int,
+    FOREIGN KEY (TEAM_ID) REFERENCES teams(TEAM_ID),
+    FOREIGN KEY (GAME_ID) REFERENCES games(GAME_ID)
 );
+
+# games details complete
+CREATE TABLE games_details_complete(
+    GAME_ID varchar(12),
+    TEAM_ID varchar(10),
+    TEAM_ABBREVIATION varchar(5),
+    PLAYER_ID varchar(20),
+    PLAYER_NAME varchar(50),
+    START_POSITION  varchar(1),
+    MIN varchar(50),
+    FGM decimal(3,1),
+    FGA decimal(3,1),
+    FG_PCT decimal(4,3),
+    FG3M decimal(3,1),
+    FG3A decimal(3,1),
+    FG3_PCT decimal(4,3),
+    FTM decimal(3,1),
+    FTA decimal(3,1),
+    FT_PCT decimal(4,3),
+    OREB int,
+    DREB int,
+    REB int,
+    AST int,
+    STL int,
+    BLK int,
+    T_O int,
+    PF int,
+    PTS int,
+    PLUS_MINUS int,
+    FOREIGN KEY (TEAM_ID) REFERENCES teams(TEAM_ID),
+    FOREIGN KEY (GAME_ID) REFERENCES games(GAME_ID),
+    FOREIGN KEY (PLAYER_ID) REFERENCES player(PLAYER_ID)
+);
+
 
 
 
