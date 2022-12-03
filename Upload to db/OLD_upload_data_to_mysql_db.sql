@@ -6,7 +6,7 @@ SET FOREIGN_KEY_CHECKS=1;
 
 # Teams
 CREATE TABLE teams(
-    TEAM_ID varchar(12),
+    TEAM_ID int,
     ABBREVIATION varchar(5),
     NICKNAME varchar(25),
     YEARFOUNDED varchar(4),
