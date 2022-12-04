@@ -31,7 +31,9 @@ async function player(req, res) {
 }
 
 async function playerInSeason(req, res){
-    const season = req.query.season
+    // const season = req.query.season
+    const season = req.params.season ? req.params.season : 2021
+
     connection.query(`
     Select * from players 
     where season=${season}

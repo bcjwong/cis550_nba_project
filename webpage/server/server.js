@@ -13,7 +13,7 @@ app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 
 app.get('/player', routes.player)
 
-app.get('/players_season', routes.playerInSeason)
+app.get('/players_season/:season', routes.playerInSeason)
 
 app.get('/playerInLeague', routes.playerInLeague)
 
