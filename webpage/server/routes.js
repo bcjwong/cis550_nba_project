@@ -17,7 +17,6 @@ async function playerInSeason(req, res){
     connection.query(`
     Select * from players 
     where season=${season}
-
     `, function (error, results, fields) {
 
         if (error) {
@@ -97,6 +96,87 @@ async function highest_win_palyers(req, res){
     JOIN Ranking R ON T.TeamID = R.TeamID
     ORDER BY R.W_PCT DESC
     LIMIT 5;
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+async function playerInGame(req, res){
+    const game_id = req.query.game_id
+    connection.query(`WITH G AS (SELECT games_details.PLAYER_ID
+          FROM games
+                   JOIN games_details
+                        ON games.game_id = games_details.game_id
+          WHERE games.game_id = ${game_id})
+        SELECT *
+        FROM player P
+        JOIN G ON P.PLAYER_ID = G.PLAYER_ID;`, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+async function top_8_team(req, res){
+    connection.query(`WITH TEMP AS (
+   SELECT season_id, team, MAX(G) as G, MAX(W) as W, MAX(L) as L FROM ranking
+   GROUP BY season_id, team
+   )
+   Select * from (
+       SELECT season_id, team, G, W, L, dense_rank() over (PARTITION BY Season_Id, team ORDER by G) as rk
+   from TEMP) a Where rk <= 8;
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+// Find the player who scores the most in each season 
+async function player_score_most(req, res){
+    connection.query(`SELECT MAX(total_point), Season, player_id from (
+   SELECT Sum(PTS) as total_point, Season, player_id from
+       (SELECT player_id, PTS, Season
+        From games_details
+        Left join games on games_details.game_id =games.game_id) temp
+        group by Season, player_id) temp1
+    group by Season, player_id;
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+// find the top 10 players who assist and score the most in history(this dataset)
+async function player_score_most_in_history(req, res){
+    connection.query(`with cte as (select PLAYER_ID, sum(AST) as total_ast
+        from games_details
+        group by PLAYER_ID
+        order by sum(AST) DESC limit 10),
+        cte1 as (select PLAYER_ID, sum(PTS) as total_ast
+    from games_details
+    group by PLAYER_ID
+    order by sum(PTS) DESC limit 10)
+    select cte.PLAYER_ID from cte
+    join cte1 on cte.PLAYER_ID = cte1.PLAYER_ID;
     `, function (error, results, fields) {
 
         if (error) {
@@ -466,3 +546,12 @@ module.exports = {
     search_players,
     playerInSeason
 }
+
+
+
+
+
+
+
+
+
