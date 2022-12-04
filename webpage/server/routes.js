@@ -12,6 +12,24 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
+async function player(req, res) {
+    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
+    // const id = req.query.id
+    const name = req.query.name
+
+    connection.query(`Select * from player 
+    where Player_name=${name}
+    `, function (error, results, fields) {
+
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        });
+}
+
 async function playerInSeason(req, res){
     const season = req.query.season
     connection.query(`
@@ -91,7 +109,7 @@ async function players_in_team(req, res){
     });
 }
 
-async function highest_win_palyers(req, res){
+async function highest_win_players(req, res){
     connection.query(`SELECT T.Nickname FROM Teams T
     JOIN Ranking R ON T.TeamID = R.TeamID
     ORDER BY R.W_PCT DESC
@@ -107,7 +125,7 @@ async function highest_win_palyers(req, res){
     });
 }
 
-async function playerInGame(req, res){
+async function player_in_game(req, res){
     const game_id = req.query.game_id
     connection.query(`WITH G AS (SELECT games_details.PLAYER_ID
           FROM games
@@ -126,7 +144,7 @@ async function playerInGame(req, res){
     });
 }
 
-async function top_8_team(req, res){
+async function top_8_teams(req, res){
     connection.query(`WITH TEMP AS (
    SELECT season_id, team, MAX(G) as G, MAX(W) as W, MAX(L) as L FROM ranking
    GROUP BY season_id, team
@@ -189,6 +207,9 @@ async function player_score_most_in_history(req, res){
 }
 
 
+
+
+
 // ********************************************
 //            SIMPLE ROUTE EXAMPLE
 // ********************************************
@@ -227,6 +248,7 @@ async function jersey(req, res) {
     }
     
 }
+
 
 // ********************************************
 //               GENERAL ROUTES
@@ -372,21 +394,21 @@ async function match(req, res) {
 //            PLAYER-SPECIFIC ROUTES
 // ********************************************
 
-// Route 6 (handler)
-async function player(req, res) {
-    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
-    // const id = req.query.id
-    const name = req.query.name
+// // Route 6 (handler)
+// async function player(req, res) {
+//     // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
+//     // const id = req.query.id
+//     const name = req.query.name
 
-    connection.query(`Select * from Players where Player_name=${name}`, function (error, results, fields) {
+//     connection.query(`Select * from Players where Player_name=${name}`, function (error, results, fields) {
 
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
+//             if (error) {
+//                 console.log(error)
+//                 res.json({ error: error })
+//             } else if (results) {
+//                 res.json({ results: results })
+//             }
+//         });
     // This is the case where page is defined.
     // The SQL schema has the attribute OverallRating, but modify it to match spec! 
     // TODO: query and return results here:
@@ -430,7 +452,7 @@ async function player(req, res) {
     // });
 
     // return res.json({error: "Not implemented"})
-}
+// }
 
 
 // ********************************************
