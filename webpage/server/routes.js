@@ -108,11 +108,13 @@ async function players_in_team(req, res){
     });
 }
 
+//----
 async function highest_win_players(req, res){
-    connection.query(`SELECT T.Nickname FROM Teams T
-    JOIN Ranking R ON T.TeamID = R.TeamID
+    connection.query(`SELECT DISTINCT T.Team_id, T.Nickname, R.W_PCT, R.Season_ID FROM teams T
+    JOIN ranking R ON T.TEAM_ID = R.TEAM_ID
+    WHERE G IN (SELECT MAX(G) FROM ranking)
     ORDER BY R.W_PCT DESC
-    LIMIT 5;
+    LIMIT 10;
     `, function (error, results, fields) {
 
         if (error) {
@@ -125,14 +127,14 @@ async function highest_win_players(req, res){
 }
 
 async function player_in_game(req, res){
-    const game_id = req.query.game_id
+    const game_id = req.query.game_id ? req.query.game_id : 52000211
     connection.query(`WITH G AS (SELECT games_details.PLAYER_ID
-          FROM games
-                   JOIN games_details
-                        ON games.game_id = games_details.game_id
-          WHERE games.game_id = ${game_id})
+            FROM games
+            JOIN games_details
+            ON games.game_id = games_details.game_id
+            WHERE games.game_id = ${game_id})
         SELECT *
-        FROM player P
+        FROM players P
         JOIN G ON P.PLAYER_ID = G.PLAYER_ID;`, function (error, results, fields) {
         if (error) {
             console.log(error)
