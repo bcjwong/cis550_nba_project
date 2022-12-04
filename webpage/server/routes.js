@@ -28,6 +28,23 @@ async function playerInSeason(req, res){
     });
 }
 
+async function player(req, res) {
+    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
+    // const id = req.query.id
+    const name = req.query.name
+
+    connection.query(`Select * from player 
+    where Player_name=${name}
+    `, function (error, results, fields) {
+
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        });
+}
 
 
 async function playerInLeague(req, res){
@@ -373,64 +390,21 @@ async function match(req, res) {
 // ********************************************
 
 // Route 6 (handler)
-async function player(req, res) {
-    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
-    // const id = req.query.id
-    const name = req.query.name
+// async function player(req, res) {
+//     // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
+//     // const id = req.query.id
+//     const name = req.query.name
 
-    connection.query(`Select * from Players where Player_name=${name}`, function (error, results, fields) {
+//     connection.query(`Select * from Players where Player_name=${name}`, function (error, results, fields) {
 
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    // This is the case where page is defined.
-    // The SQL schema has the attribute OverallRating, but modify it to match spec! 
-    // TODO: query and return results here:
-    // connection.query(`SELECT BestPosition
-    // FROM Players
-    // WHERE PlayerId = ${id}`, function (error, results, fields) {
-    //     if (error) {
-    //         console.log(error)
-    //         res.json({ error: error })
-    //     } else if (results[0].BestPosition == "GK") {
-    //         connection.query(`SELECT PlayerId, Name, Age, Photo, Nationality, Flag, OverallRating AS Rating, Potential, Club,
-    //                         ClubLogo, Value, Wage, InternationalReputation, Skill, JerseyNumber, ContractValidUntil, Height,
-    //                         Weight, BestPosition, BestOverallRating, ReleaseClause, GKPenalties, GKDiving, GKHandling, GKKicking,
-    //                         GKPositioning, GKReflexes
-    //         FROM Players
-    //         WHERE PlayerId = ${id}`, function (error, results, fields) {
-
-    //             if (error) {
-    //                 console.log(error)
-    //                 res.json({ error: error })
-    //             } else if (results) {
-    //                 res.json({ results: results })
-    //             }
-    //         })
-    //     } else if (results){
-    //         connection.query(`SELECT PlayerId, Name, Age, Photo, Nationality, Flag, OverallRating AS Rating, Potential, Club,
-    //                         ClubLogo, Value, Wage, InternationalReputation, Skill, JerseyNumber, ContractValidUntil, Height,
-    //                         Weight, BestPosition, BestOverallRating, ReleaseClause, NPassing, NBallControl, NAdjustedAgility, 
-    //                         NStamina, NStrength, NPositioning
-    //         FROM Players
-    //         WHERE PlayerId = ${id}`, function (error, results, fields) {
-
-    //             if (error) {
-    //                 console.log(error)
-    //                 res.json({ error: error })
-    //             } else if (results) {
-    //                 res.json({ results: results })
-    //             }
-    //         })
-    //     }
-    // });
-
-    // return res.json({error: "Not implemented"})
-}
+//             if (error) {
+//                 console.log(error)
+//                 res.json({ error: error })
+//             } else if (results) {
+//                 res.json({ results: results })
+//             }
+//         });
+// }
 
 
 // ********************************************
@@ -541,10 +515,18 @@ module.exports = {
     all_matches,
     all_players,
     match,
-    player,
     search_matches,
     search_players,
-    playerInSeason
+    player,
+    playerInSeason,
+    playerInLeague,
+    games_details,
+    players_in_team,
+    highest_win_palyers,
+    playerInGame,
+    top_8_team,
+    player_score_most,
+    player_score_most_in_history
 }
 
 

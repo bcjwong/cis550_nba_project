@@ -3,7 +3,7 @@
     "rds_port": "3306",
     "rds_user": "rds_admin",
     "rds_password" : "KPzGDnGPi2frYL6",
-    "rds_db": "FIFA",
+    "rds_db": "NBA_DATA",
     "server_host": "127.0.0.1",
     "server_port":"8080"
 }
