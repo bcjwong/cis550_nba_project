@@ -75,9 +75,9 @@ async function games_details(req, res){
     const visitor = req.query.visitor
     const season = req.query.season
 
-    connection.query(`Select * from Games 
-    Join Game_details
-    on Games.game_id = Game_details.game_id
+    connection.query(`Select * from games 
+    Join games_details
+    on games.game_id = games_details.game_id
     where home_team_id=${home} 
     and visitor_team_id=${visitor} 
     and season = ${season} 
@@ -94,9 +94,9 @@ async function games_details(req, res){
 
 async function players_in_team(req, res){
     const team_name = req.query.team_name
-    connection.query(`SELECT Player_Name FROM from Players P
-    JOIN Teams T ON P.Team_ID = T.Team_ID
-    WHERE T.Nickname = ${team_name};     
+    connection.query(`SELECT DISTINCT PLAYER_NAME FROM players P
+    JOIN teams T ON P.Team_ID = T.Team_ID
+    WHERE T.Nickname =  ${team_name};        
     `, function (error, results, fields) {
 
         if (error) {
@@ -187,15 +187,17 @@ async function player_score_most(req, res){
 // find the top 10 players who assist and score the most in history(this dataset)
 async function player_score_most_in_history(req, res){
     connection.query(`with cte as (select PLAYER_ID, sum(AST) as total_ast
-        from games_details
-        group by PLAYER_ID
-        order by sum(AST) DESC limit 10),
+    from games_details
+    group by PLAYER_ID
+    order by sum(AST) DESC),
         cte1 as (select PLAYER_ID, sum(PTS) as total_ast
     from games_details
     group by PLAYER_ID
-    order by sum(PTS) DESC limit 10)
+    order by sum(PTS) DESC)
+    
     select cte.PLAYER_ID from cte
-    join cte1 on cte.PLAYER_ID = cte1.PLAYER_ID;
+    join cte1 on cte.PLAYER_ID = cte1.PLAYER_ID
+    LIMIT 10;
     `, function (error, results, fields) {
 
         if (error) {
