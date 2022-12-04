@@ -17,8 +17,8 @@ async function player(req, res) {
     // const id = req.query.id
     const name = req.query.name
 
-    connection.query(`Select * from player 
-    where Player_name=${name}
+    connection.query(`Select * from players 
+    where player_name=${name}
     `, function (error, results, fields) {
 
             if (error) {
@@ -44,24 +44,6 @@ async function playerInSeason(req, res){
             res.json({ results: results })
         }
     });
-}
-
-async function player(req, res) {
-    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
-    // const id = req.query.id
-    const name = req.query.name
-
-    connection.query(`Select * from player 
-    where Player_name=${name}
-    `, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
 }
 
 
@@ -587,9 +569,9 @@ module.exports = {
     playerInLeague,
     games_details,
     players_in_team,
-    highest_win_palyers,
-    playerInGame,
-    top_8_team,
+    highest_win_players,
+    player_in_game,
+    top_8_teams,
     player_score_most,
     player_score_most_in_history
 }
