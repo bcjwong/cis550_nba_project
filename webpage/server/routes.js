@@ -77,9 +77,9 @@ async function games_details(req, res){
     const visitor = req.query.visitor
     const season = req.query.season
 
-    connection.query(`Select * from games 
-    Join games_details
-    on games.game_id = games_details.game_id
+    connection.query(`Select DISTINCT g.game_date_est, g.game_id, g.game_status_text, g.home_team_id, g.visitor_team_id, season, g.Pts_home AS Points_Home, g.Pts_away AS Points_Away from games g
+    Join games_details gd
+    on g.game_id = gd.game_id
     where home_team_id=${home} 
     and visitor_team_id=${visitor} 
     and season = ${season} 
