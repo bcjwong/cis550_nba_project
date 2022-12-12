@@ -44,7 +44,7 @@ async function all_games(req, res) {
             const start = (page-1) * pagesize
 
             connection.query(`
-            SELECT game_id, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away
+            SELECT game_id AS GameId, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away
             from games
             join teams t on games.HOME_TEAM_ID = t.TEAM_ID
             join teams p on games.VISITOR_TEAM_ID = p.TEAM_ID
@@ -62,7 +62,8 @@ async function all_games(req, res) {
         }
         else {
             connection.query(`
-            SELECT game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away from games
+            SELECT game_id AS GameId, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away 
+            from games
             join teams t on games.HOME_TEAM_ID = t.TEAM_ID
             join teams p on games.VISITOR_TEAM_ID = p.TEAM_ID
             WHERE Season=${season}
@@ -77,6 +78,54 @@ async function all_games(req, res) {
             });
         }
 }
+
+/*  game page */
+async function games_details(req, res){
+    const home = req.query.home ? req.query.home : ""
+    const visitor = req.query.visitor ? req.query.visitor : ""
+    const season = req.query.season ? req.query.season : 2021
+
+    connection.query(`SELECT game_id AS GameId, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away 
+    From games g
+    Join teams t on g.HOME_TEAM_ID = t.TEAM_ID
+    join teams p on g.VISITOR_TEAM_ID = p.TEAM_ID
+    where t.NICKNAME LIKE "%${home}%"
+    and p.NICKNAME LIKE "%${visitor}%"
+    and season = ${season}
+    ORDER BY game_date_est DESC 
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+// Route 5 (handler)
+async function game(req, res) {
+    // TODO: TASK 6: implement and test, potentially writing your own (ungraded) tests
+    const id = req.query.id
+    
+    connection.query(`SELECT *
+    FROM games
+    WHERE game_id = ${id}`, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+   
+    // return res.json({error: "Not implemented"})
+}
+
+/* game page end */
+
 
 async function all_teams(req, res){
 
@@ -144,29 +193,6 @@ async function playerInLeague(req, res){
     Select player_id, player_name from games_details
     Where team_id in (select team_id from team_league)
     And start_position=${position}
-    `, function (error, results, fields) {
-
-        if (error) {
-            console.log(error)
-            res.json({ error: error })
-        } else if (results) {
-            res.json({ results: results })
-        }
-    });
-}
-
-/*  seach games */
-async function games_details(req, res){
-    const home = req.query.home ? req.query.home : ""
-    const visitor = req.query.visitor ? req.query.visitor : ""
-    const season = req.query.season ? req.query.season : ""
-
-    connection.query(`Select DISTINCT g.game_date_est, g.game_id, g.game_status_text, g.home_team_id, g.visitor_team_id, season, g.Pts_home AS Points_Home, g.Pts_away AS Points_Away from games g
-    Join games_details gd
-    on g.game_id = gd.game_id
-    where home_team_id=${home} 
-    and visitor_team_id=${visitor} 
-    and season = ${season} 
     `, function (error, results, fields) {
 
         if (error) {
@@ -664,10 +690,10 @@ module.exports = {
     top_8_teams,
     player_score_most,
     player_score_most_in_history,
-
     all_games,
     all_teams,
-    search_teams
+    search_teams,
+    game
 }
 
 

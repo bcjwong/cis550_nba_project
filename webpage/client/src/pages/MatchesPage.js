@@ -26,19 +26,20 @@ class MatchesPage extends React.Component {
         this.state = {
             awayQuery: "",
             homeQuery: "",
-            matchesResults: [],
-            selectedMatchId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
-            selectedMatchDetails: null
+            gamesResults: [],
+            selectedGameId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
+            selectedGameDetails: null
 
         }
 
         this.handleAwayQueryChange = this.handleAwayQueryChange.bind(this)
         this.handleHomeQueryChange = this.handleHomeQueryChange.bind(this)
+        this.handleSeasonQueryChange = this.handleSeasonQueryChange.bind(this)
         this.updateSearchResults = this.updateSearchResults.bind(this)
-        this.goToMatch = this.goToMatch.bind(this)
+
+        this.goToGame = this.goToGame.bind(this)
 
     }
-
 
 
     handleAwayQueryChange(event) {
@@ -46,27 +47,32 @@ class MatchesPage extends React.Component {
     }
 
     handleHomeQueryChange(event) {
-        // TASK 10: update state variables appropriately. See handleAwayQueryChange(event) for reference
         this.setState({ homeQuery: event.target.value })
     }
-    goToMatch(matchId) {
-        window.location = `/matches?id=${matchId}`
+    
+    handleSeasonQueryChange(event) {
+        this.setState({ seasonQuery: event.target.value })
+    }
+
+    goToGame(gameId) {
+        window.location = `/games?id=${gameId}`
     }
 
     updateSearchResults() {
         //TASK 11: call getMatchSearch and update matchesResults in state. See componentDidMount() for a hint
-        getMatchSearch(this.state.homeQuery, this.state.awayQuery, null, null).then(res => {
-            this.setState({ matchesResults: res.results })
+        getGameSearch(this.state.homeQuery, this.state.awayQuery, this.state.seasonQuery).then(res => {
+            this.setState({ gamesResults: res.results })
+            console.log(res.results)
         })
     }
 
     componentDidMount() {
-        getMatchSearch(this.state.homeQuery, this.state.awayQuery, null, null).then(res => {
-            this.setState({ matchesResults: res.results })
+        getGameSearch(this.state.homeQuery, this.state.awayQuery, this.state.seasonQuery).then(res => {
+            this.setState({ gamesResults: res.results })
         })
 
-        getMatch(this.state.selectedMatchId).then(res => {
-            this.setState({ selectedMatchDetails: res.results[0] })
+        getGame(this.state.selectedGameId).then(res => {
+            this.setState({ selectedGameDetails: res.results[0] })
         })
 
 
@@ -85,8 +91,12 @@ class MatchesPage extends React.Component {
                             <FormInput placeholder="Home Team" value={this.state.homeQuery} onChange={this.handleHomeQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Away Team</label>
+                            <label>Visitor Team</label>
                             <FormInput placeholder="Away Team" value={this.state.awayQuery} onChange={this.handleAwayQueryChange} />
+                        </FormGroup></Col>
+                        <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
+                            <label>Season</label>
+                            <FormInput placeholder="Season" value={this.state.seasonQuery} onChange={this.handleSeasonQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '10vw' }}>
                             <Button style={{ marginTop: '4vh' }} onClick={this.updateSearchResults}>Search</Button>
@@ -97,28 +107,26 @@ class MatchesPage extends React.Component {
 
                 </Form>
                 <Divider />
-                {/* TASK 12: Copy over your implementation of the matches table from the home page */}
-                            <Table onRow={(record, rowIndex) => {
-                return {
-                onClick: event => {this.goToMatch(record.MatchId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
-                };
-            }} dataSource={this.state.matchesResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
-                        <ColumnGroup title="Teams">
-                        {/* TASK 4: correct the title for the 'Home' column and add a similar column for 'Away' team in this ColumnGroup */}
-                        <Column title="Home" dataIndex="Home" key="Home" sorter= {(a, b) => a.Home.localeCompare(b.Home)}/>
-                        <Column title="Away" dataIndex="Away" key="Away" sorter= {(a, b) => a.Away.localeCompare(b.Away)}/>
-                        </ColumnGroup>
-                        <ColumnGroup title="Goals">
-                        {/* TASK 5: add columns for home and away goals in this ColumnGroup, with the ability to sort values in these columns numerically */}
-                        <Column title="HomeGoals" dataIndex="HomeGoals" key="HomeGoals" sorter= {(a, b) => a.HomeGoals > b.HomeGoals }/>
-                        <Column title="AwayGoals" dataIndex="AwayGoals" key="AwayGoals" sorter= {(a, b) => a.AwayGoals > b.AwayGoals}/>
-                        </ColumnGroup>
-                        {/* TASK 6: create two columns (independent - not in a column group) for the date and time. Do not add a sorting functionality */}
-                        <Column title="Date" dataIndex="Date" key="Date"/>
-                        <Column title="Time" dataIndex="Time" key="Time"/>
-                    </Table>    
+                {/* TASK 12: Copy over your implementation of the games table from the home page */}
+                <Table onRow={(record, rowIndex) => {
+                    return {
+                        onClick: event => {this.goToGame(record.GameId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
+                    };
+                    }} dataSource={this.state.gamesResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
+                            <ColumnGroup title="Teams">
+                                <Column title="Home" dataIndex="Home" key="Home" sorter= {(a, b) => a.Home.localeCompare(b.Home)}/>
+                                <Column title="Visitor" dataIndex="Visitor" key="Visitor" sorter= {(a, b) => a.Visitor.localeCompare(b.Visitor)}/>
+                            </ColumnGroup>
+                            <ColumnGroup title="Points">
+                                <Column title="HomePts" dataIndex="PTS_home" key="PTS_home" sorter= {(a, b) => a.PTS_home > b.PTS_home }/>
+                                <Column title="VisitorPts" dataIndex="PTS_away" key="PTS_away" sorter= {(a, b) => a.PTS_away > b.PTS_away}/>
+                            </ColumnGroup>
+                            {/* TASK 6: create two columns (independent - not in a column group) for the date and time. Do not add a sorting functionality */}
+                            <Column title="Date" dataIndex="Date" key="Date"/>
+                    </Table>
+                
                 <Divider />
-                {this.state.selectedMatchDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
+                {this.state.selectedGameDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                     <Card>
                         <CardBody>
 

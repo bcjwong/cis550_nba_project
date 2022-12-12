@@ -32,11 +32,14 @@ app.get('/player_score_most_overall', routes.player_score_most_in_history)
 //-- 12/11/2022
 app.get('/games/:season', routes.all_games)
 
+app.get('/search/game_details', routes.games_details)
+
+app.get('/game', routes.game)
+
 app.get('/teams', routes.all_teams)
 
 app.get('search/teams', routes.search_teams)
 
-app.get('/search/game_details', routes.games_details)
 
 
 //--------------------------------------

@@ -22,20 +22,25 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route exact
-							path="/"
-							render={() => (
-								<HomePage />
-							)}/>
+		path="/"
+		render={() => (
+			<HomePage />
+		)}/>
         <Route exact
-							path="/players"
-							render={() => (
-								<PlayersPage />
-							)}/>
+		path="/players"
+		render={() => (
+			<PlayersPage />
+		)}/>
+		<Route exact
+		path="/teams"
+		render={() => (
+			<PlayersPage />
+		)}/>
         <Route exact
-							path="/matches"
-							render={() => (
-								<MatchesPage />
-							)}/>
+		path="/games"
+		render={() => (
+			<MatchesPage />
+		)}/>
       </Switch>
     </Router>
   </div>,

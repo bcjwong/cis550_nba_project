@@ -8,7 +8,7 @@ import config from './config.json'
 // }
 
 const getAllTeams = async (page, pagesize) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/teams`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/teams?page=${page}&pagesize=${pagesize}`, {
         method: 'GET',
     })
     return res.json()
