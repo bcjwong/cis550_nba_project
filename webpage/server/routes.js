@@ -109,8 +109,11 @@ async function game(req, res) {
     // TODO: TASK 6: implement and test, potentially writing your own (ungraded) tests
     const id = req.query.id
     
-    connection.query(`SELECT *
-    FROM games
+    connection.query(`SELECT game_id AS GameId, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away, 
+    AST_home, REB_home, AST_away, REB_away, FG_PCT_home, FT_PCT_home, FG3_PCT_home, FG_PCT_away, FT_PCT_away, FG3_PCT_away
+    From games g
+    Join teams t on g.HOME_TEAM_ID = t.TEAM_ID
+    join teams p on g.VISITOR_TEAM_ID = p.TEAM_ID
     WHERE game_id = ${id}`, function (error, results, fields) {
 
         if (error) {

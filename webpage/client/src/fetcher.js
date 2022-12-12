@@ -36,14 +36,14 @@ const getGame = async (id) => {
 }
 
 const getTeamSearch = async (home) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/teams?Area=${home}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/teams?area=${home}`, {
         method: 'GET',
     })
     return res.json()
 }
 
 const getGameSearch = async (home, visitor, season) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/game_details?Home=${home}&Visitor=${visitor}&Season=${season}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/game_details?home=${home}&visitor=${visitor}&season=${season}`, {
         method: 'GET',
     })
     return res.json()
