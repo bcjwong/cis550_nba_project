@@ -1,9 +1,9 @@
 {
-  "short_name": "FIFA Client",
-  "name": "CIS 550 - HW2 FIFA Client",
+  "short_name": "NBA Client",
+  "name": "CIS 550 - Project NBA Client",
   "icons": [
     {
-      "src": "football.svg",
+      "src": "basketball.svg",
       "type": "image/png",
       "sizes": "512x512"
     }
