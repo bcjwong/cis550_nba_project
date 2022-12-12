@@ -84,7 +84,6 @@ class HomePage extends React.Component {
 
   goToTeam(teamId) {
     window.location = `/teams?id=${teamId}`
-
   }
 
   // Season change component
@@ -119,7 +118,7 @@ class HomePage extends React.Component {
           <h3>Teams</h3>
           <Table onRow={(record, rowIndex) => {
             return {
-              onClick: event => {this.goToTeam(record.TeamId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
+              onClick: event => {this.goToTeam(record.TeamId)}, // clicking a row takes the user to a detailed view of the match in the /games page using the MatchId parameter  
             };
           }} dataSource={this.state.teamsResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                   <Column title="Name" dataIndex="name" key="name" sorter= {(a, b) => a.name.localeCompare(b.name)}/>

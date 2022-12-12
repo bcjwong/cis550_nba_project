@@ -8,9 +8,9 @@ import {
 
 import HomePage from './pages/HomePage';
 import PlayersPage from './pages/PlayersPage';
-import MatchesPage from './pages/MatchesPage';
-// import GamesPage from './pages/GamesPage';
-// import TeamsPage from './pages/TeamsPage';
+// import MatchesPage from './pages/MatchesPage';
+import TeamsPage from './pages/TeamsPage';
+import GamesPage from './pages/GamesPage';
 import 'antd/dist/antd.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -34,12 +34,12 @@ ReactDOM.render(
 		<Route exact
 		path="/teams"
 		render={() => (
-			<PlayersPage />
+			<TeamsPage />
 		)}/>
         <Route exact
 		path="/games"
 		render={() => (
-			<MatchesPage />
+			<GamesPage />
 		)}/>
       </Switch>
     </Router>

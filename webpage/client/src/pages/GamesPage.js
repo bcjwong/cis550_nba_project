@@ -20,7 +20,7 @@ import MenuBar from '../components/MenuBar';
 const { Column, ColumnGroup } = Table;
 
 
-class MatchesPage extends React.Component {
+class GamesPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -228,5 +228,5 @@ class MatchesPage extends React.Component {
     }
 }
 
-export default MatchesPage
+export default GamesPage
 

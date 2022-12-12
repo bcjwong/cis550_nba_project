@@ -133,7 +133,7 @@ async function game(req, res) {
 async function all_teams(req, res){
 
     connection.query(`
-    SELECT team_id, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
+    SELECT team_id as TeamId, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
     FROM teams
     `, function (error, results, fields) {
 
@@ -146,8 +146,8 @@ async function all_teams(req, res){
     });
 }
 
-async function search_teams(req, res){
-    const Name = req.query.Name ? req.query.Name : ""
+async function team(req, res){
+    const Name = req.query.id ? req.query.id : 1610612748
 
     connection.query(`
     SELECT team_id, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
@@ -695,7 +695,7 @@ module.exports = {
     player_score_most_in_history,
     all_games,
     all_teams,
-    search_teams,
+    team,
     game
 }
 

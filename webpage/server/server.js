@@ -38,7 +38,7 @@ app.get('/game', routes.game)
 
 app.get('/teams', routes.all_teams)
 
-app.get('search/teams', routes.search_teams)
+app.get('/team', routes.team)
 
 
 
