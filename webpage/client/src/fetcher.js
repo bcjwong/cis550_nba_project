@@ -92,8 +92,8 @@ const getMatchSearch = async (home, away, page, pagesize) => {
     return res.json()
 }
 
-const getPlayerSearch = async (name, nationality, club, rating_high, rating_low, pot_high, pot_low, page, pagesize) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/players?Name=${name}&Nationality=${nationality}&Club=${club}&RatingLow=${rating_low}&RatingHigh=${rating_high}&PotentialHigh=${pot_high}&PotentialLow=${pot_low}&page=${page}&pagesize=${pagesize}`, {
+const getPlayerSearch = async (name, team, season) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/players?Name=${name}&Team=${team}&Season=${season}`, {
         method: 'GET',
     })
     return res.json()
