@@ -17,10 +17,8 @@ app.get('/players_season/:season', routes.playerInSeason)
 
 app.get('/playerInLeague', routes.playerInLeague)
 
-app.get('/games', routes.games_details)
-
 app.get('/players_in_team', routes.players_in_team)
-//---
+
 app.get('/highest_win_players', routes.highest_win_players)
 
 app.get('/player_in_game', routes.player_in_game)
@@ -30,6 +28,16 @@ app.get('/top_teams', routes.top_8_teams)
 app.get('/player_score_most', routes.player_score_most)
 
 app.get('/player_score_most_overall', routes.player_score_most_in_history)
+
+//-- 12/11/2022
+app.get('/games/:season', routes.all_games)
+
+app.get('/teams', routes.all_teams)
+
+app.get('search/teams', routes.search_teams)
+
+app.get('/search/game_details', routes.games_details)
+
 
 //--------------------------------------
 

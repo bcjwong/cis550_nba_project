@@ -1,5 +1,62 @@
 import config from './config.json'
 
+// const getAllPlayers = async (page, pagesize, league) => {
+//     var res = await fetch(`http://${config.server_host}:${config.server_port}/matches/${league}?page=${page}&pagesize=${pagesize}`, {
+//         method: 'GET',
+//     })
+//     return res.json()
+// }
+
+const getAllTeams = async (page, pagesize) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/teams`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getAllGames = async (page, pagesize, season) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/games/${season}?page=${page}&pagesize=${pagesize}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getTeam = async (id) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/team?id=${id}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getGame = async (id) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/game?id=${id}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getTeamSearch = async (home) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/teams?Area=${home}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getGameSearch = async (home, visitor, season) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/game_details?Home=${home}&Visitor=${visitor}&Season=${season}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+
+
+
+
+
+
+//-------
+
 const getAllMatches = async (page, pagesize, league) => {
     var res = await fetch(`http://${config.server_host}:${config.server_port}/matches/${league}?page=${page}&pagesize=${pagesize}`, {
         method: 'GET',
@@ -60,5 +117,12 @@ export {
     getMatch,
     getPlayer,
     getMatchSearch,
-    getPlayerSearch
+    getPlayerSearch,
+    getAllGames,
+    getAllTeams,
+    getGameSearch,
+    getTeamSearch,
+    getGame,
+    getTeam
+
 }

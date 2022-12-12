@@ -8,11 +8,14 @@ import {
 
 import HomePage from './pages/HomePage';
 import PlayersPage from './pages/PlayersPage';
+import MatchesPage from './pages/MatchesPage';
+// import GamesPage from './pages/GamesPage';
+// import TeamsPage from './pages/TeamsPage';
 import 'antd/dist/antd.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-import MatchesPage from './pages/MatchesPage';
+
 
 ReactDOM.render(
   <div>

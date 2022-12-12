@@ -13,7 +13,6 @@ const connection = mysql.createConnection({
 connection.connect();
 
 async function player(req, res) {
-    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
     // const id = req.query.id
     const name = req.query.name
 
@@ -30,8 +29,92 @@ async function player(req, res) {
         });
 }
 
+// 12/11/2022
+/* HOME PAGE */
+async function all_games(req, res) {
+        const season = req.params.season ? req.params.season : 2021
+
+        const page = req.query.page
+        const pagesize = req.query.pagesize ? req.query.pagesize : 10
+
+        if (req.query.page && !isNaN(req.query.page)) {
+            // This is the case where page is defined.
+            // The SQL schema has the attribute OverallRating, but modify it to match spec! 
+            // TODO: query and return results here:
+            const start = (page-1) * pagesize
+
+            connection.query(`
+            SELECT game_id, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away
+            from games
+            join teams t on games.HOME_TEAM_ID = t.TEAM_ID
+            join teams p on games.VISITOR_TEAM_ID = p.TEAM_ID
+            WHERE Season=${season}
+            ORDER BY GAME_DATE_EST DESC
+            LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
+
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+        else {
+            connection.query(`
+            SELECT game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away from games
+            join teams t on games.HOME_TEAM_ID = t.TEAM_ID
+            join teams p on games.VISITOR_TEAM_ID = p.TEAM_ID
+            WHERE Season=${season}
+            ORDER BY GAME_DATE_EST DESC`, function (error, results, fields) {
+
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+}
+
+async function all_teams(req, res){
+
+    connection.query(`
+    SELECT team_id, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
+    FROM teams
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+async function search_teams(req, res){
+    const Name = req.query.Name ? req.query.Name : ""
+
+    connection.query(`
+    SELECT team_id, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
+    FROM teams
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+
+/////////////////////////////////////////2022-11-12////////////////
+
 async function playerInSeason(req, res){
-    // const season = req.query.season
     const season = req.params.season ? req.params.season : 2021
 
     connection.query(`
@@ -72,10 +155,11 @@ async function playerInLeague(req, res){
     });
 }
 
+/*  seach games */
 async function games_details(req, res){
-    const home = req.query.home
-    const visitor = req.query.visitor
-    const season = req.query.season
+    const home = req.query.home ? req.query.home : ""
+    const visitor = req.query.visitor ? req.query.visitor : ""
+    const season = req.query.season ? req.query.season : ""
 
     connection.query(`Select DISTINCT g.game_date_est, g.game_id, g.game_status_text, g.home_team_id, g.visitor_team_id, season, g.Pts_home AS Points_Home, g.Pts_away AS Points_Away from games g
     Join games_details gd
@@ -94,6 +178,7 @@ async function games_details(req, res){
     });
 }
 
+/* TEAM PAGE */
 async function players_in_team(req, res){
     const team_name = req.query.team_name
     connection.query(`SELECT DISTINCT PLAYER_NAME FROM players P
@@ -110,7 +195,8 @@ async function players_in_team(req, res){
     });
 }
 
-//----
+//---
+/* PLAYER PAGE */
 async function highest_win_players(req, res){
     connection.query(`SELECT DISTINCT T.Team_id, T.Nickname, R.W_PCT, R.Season_ID FROM teams T
     JOIN ranking R ON T.TEAM_ID = R.TEAM_ID
@@ -147,6 +233,7 @@ async function player_in_game(req, res){
     });
 }
 
+/* TEAMS PAGE */
 async function top_8_teams(req, res){
     connection.query(`WITH TEMP AS (
    SELECT season_id, team, MAX(G) as G, MAX(W) as W, MAX(L) as L FROM ranking
@@ -166,6 +253,7 @@ async function top_8_teams(req, res){
     });
 }
 
+/* PLAYER PAGE */
 // Find the player who scores the most in each season 
 async function player_score_most(req, res){
     connection.query(`SELECT MAX(total_point), Season, player_id from (
@@ -186,6 +274,7 @@ async function player_score_most(req, res){
     });
 }
 
+/* PLAYER PAGE */
 // find the top 10 players who assist and score the most in history(this dataset)
 async function player_score_most_in_history(req, res){
     connection.query(`with cte as (select PLAYER_ID, sum(AST) as total_ast
@@ -262,11 +351,6 @@ async function jersey(req, res) {
 
 // Route 3 (handler)
 async function all_matches(req, res) {
-    // TODO: TASK 4: implement and test, potentially writing your own (ungraded) tests
-    // We have partially implemented this function for you to 
-    // parse in the league encoding - this is how you would use the ternary operator to set a variable to a default value
-    // we didn't specify this default value for league, and you could change it if you want! 
-    // in reality, league will never be undefined since URLs will need to match matches/:league for the request to be routed here... 
     const league = req.params.league ? req.params.league : 'D1'
     const page = req.query.page
     const pagesize = req.query.pagesize ? req.query.pagesize : 10
@@ -579,7 +663,11 @@ module.exports = {
     player_in_game,
     top_8_teams,
     player_score_most,
-    player_score_most_in_history
+    player_score_most_in_history,
+
+    all_games,
+    all_teams,
+    search_teams
 }
 
 

@@ -11,7 +11,8 @@ import {
 
 } from 'antd'
 
-import { getMatchSearch, getMatch } from '../fetcher'
+// import { getMatchSearch, getMatch } from '../fetcher'
+import { getGameSearch, getGame } from '../fetcher'
 
 
 import MenuBar from '../components/MenuBar';
