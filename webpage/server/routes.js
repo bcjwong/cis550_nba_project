@@ -12,25 +12,12 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
-async function player(req, res) {
-    // const id = req.query.id
-    const name = req.query.name
-
-    connection.query(`Select * from players 
-    where player_name=${name}
-    `, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-}
 
 // 12/11/2022
-/* HOME PAGE */
+/* 
+***************************************  HOME PAGE  *************************************** 
+
+*/
 async function all_games(req, res) {
         const season = req.params.season ? req.params.season : 2021
 
@@ -79,7 +66,9 @@ async function all_games(req, res) {
         }
 }
 
-/*  game page */
+/*  
+*************************************  game page *************************************  
+*/
 async function games_details(req, res){
     const home = req.query.home ? req.query.home : ""
     const visitor = req.query.visitor ? req.query.visitor : ""
@@ -208,6 +197,26 @@ async function teams_conference(req, res){
 }
 
 /////////////////////////////////////////2022-11-12////////////////
+/*
+************************************ Player Page **************************************
+*/
+
+async function player(req, res){
+    const id = req.query.id
+
+    connection.query(`
+    SELECT * FROM players
+    WHERE PLAYER_ID = ${id}
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
 
 async function playerInSeason(req, res){
     const season = req.params.season ? req.params.season : 2021
@@ -669,25 +678,29 @@ async function search_matches(req, res) {
 
 // Route 8 (handler)
 async function search_players(req, res) {
-    // TODO: TASK 9: implement and test, potentially writing your own (ungraded) tests
-    // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
     const Name = req.query.Name ? req.query.Name : ""
-    const Nationality = req.query.Nationality ? req.query.Nationality : ""
-    const Club = req.query.Club ? req.query.Club : ""
-    const RatingLow = req.query.RatingLow ? req.query.RatingLow : 0
-    const RatingHigh = req.query.RatingHigh ? req.query.RatingHigh : 100
-    const PotentialLow = req.query.PotentialLow ? req.query.PotentialLow : 0
-    const PotentialHigh = req.query.PotentialHigh ? req.query.PotentialHigh : 100
+    const Season = req.query.Season ? req.query.Season : ""
+    const Team_name = req.query.Team ? req.query.Team : ""
     const page = req.query.page
     const pagesize = req.query.pagesize ? req.query.pagesize : 10
 
     if (req.query.page && !isNaN(req.query.page)) {
         const start = (page-1) * pagesize
-        connection.query(`SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-        FROM Players
-        WHERE Name LIKE '%${Name}%' and Nationality LIKE '%${Nationality}%' and Club LIKE '%${Club}%' and
-            OverallRating >= ${RatingLow} and OverallRating <= ${RatingHigh} and Potential >= ${PotentialLow} and Potential <= ${PotentialHigh}
-        ORDER BY Name
+        /* 
+        This part may need some modification!
+        
+        */
+        connection.query(`
+        WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+                    FROM players p
+                    JOIN teams t on p.TEAM_ID = t.TEAM_ID
+                    WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
+                    )
+        SELECT p.Name, p.Team, p.Season, AVG(g.PTS), AVG(g.AST), AVG(g.REB)
+        FROM games_details g
+        JOIN  p on g.PLAYER_ID = p.PLAYER_ID
+        GROUP BY p.SEASON, p.PLAYER_NAME
+        ORDER BY p.Name
         LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
 
             if (error) {
@@ -700,11 +713,17 @@ async function search_players(req, res) {
    
     } else {
         // we have implemented this for you to see how to return results by querying the database
-        connection.query(`SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-        FROM Players
-        WHERE Name LIKE '%${Name}%' and Nationality LIKE '%${Nationality}%' and Club LIKE '%${Club}%' and
-            OverallRating >= ${RatingLow} and OverallRating <= ${RatingHigh} and Potential >= ${PotentialLow} and Potential <= ${PotentialHigh}
-        ORDER BY Name`, function (error, results, fields) {
+        connection.query(`
+        WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+                    FROM players p
+                    JOIN teams t on p.TEAM_ID = t.TEAM_ID
+                    WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
+                    )
+        SELECT p.Name, p.Team, p.Season, AVG(g.PTS), AVG(g.AST), AVG(g.REB)
+        FROM games_details g
+        JOIN  p on g.PLAYER_ID = p.PLAYER_ID
+        GROUP BY p.SEASON, p.PLAYER_NAME
+        ORDER BY p.Name`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -714,8 +733,6 @@ async function search_players(req, res) {
             }
         });
     }
-
-    // return res.json({error: "Not implemented"})
 }
 
 module.exports = {
