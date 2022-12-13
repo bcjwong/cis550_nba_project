@@ -49,6 +49,19 @@ const getGameSearch = async (home, visitor, season) => {
     return res.json()
 }
 
+const getTeamPlayers = async (id) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/team_players?id=${id}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getConferenceTeams = async (conference, season) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/teams_conference?conference=${conference}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
 
 
 
@@ -111,6 +124,9 @@ const getPlayerSearch = async (name, team, season) => {
 
 
 
+
+
+
 export {
     getAllMatches,
     getAllPlayers,
@@ -123,6 +139,7 @@ export {
     getGameSearch,
     getTeamSearch,
     getGame,
-    getTeam
-
+    getTeam,
+    getTeamPlayers,
+    getConferenceTeams
 }

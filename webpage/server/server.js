@@ -17,7 +17,7 @@ app.get('/players_season/:season', routes.playerInSeason)
 
 app.get('/playerInLeague', routes.playerInLeague)
 
-app.get('/players_in_team', routes.players_in_team)
+// app.get('/players_in_team', routes.players_in_team)
 
 app.get('/highest_win_players', routes.highest_win_players)
 
@@ -39,6 +39,10 @@ app.get('/game', routes.game)
 app.get('/teams', routes.all_teams)
 
 app.get('/team', routes.team)
+
+app.get('/team_players', routes.team_players)
+
+app.get('/teams_conference', routes.teams_conference)
 
 
 
