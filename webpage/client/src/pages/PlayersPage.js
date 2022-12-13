@@ -167,7 +167,6 @@ class PlayersPage extends React.Component {
 
                 {this.state.selectedPlayerDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                     <Card>
-                    
                         <CardBody>
                         <Row gutter='30' align='middle' justify='center'>
                             <Col flex={2} style={{ textAlign: 'left' }}>
