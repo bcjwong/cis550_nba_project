@@ -80,7 +80,9 @@ class TeamsPage extends React.Component {
 
                 {/* ---Teams table--- */}
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
+                <h7>Click on for details</h7>
                 <h3>Teams 2021 stats</h3>
+
                 <Select defaultValue="Conference" style={{ width: 120 }} onChange={this.conferenceOnChange}>
                     <Option value="EAST">East</Option>
                     <Option value="WEST">West</Option>
