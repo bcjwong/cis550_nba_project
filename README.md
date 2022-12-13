@@ -37,3 +37,7 @@ Data pre-processing - Zhihao Yan, Yingzhe Chen, Hui Sui
 SQL and writeup - Benjamin Wong, Yingzhe Chen, Zhihao Yang
 Web DB (APIs, React, NodeJS) - Hui Sui, Benjamin Wong
 
+### Credits
+NBA team logos:
+https://boundtoball.com/all-30-nba-team-logos/
+

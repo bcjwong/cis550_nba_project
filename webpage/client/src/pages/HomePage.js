@@ -11,7 +11,6 @@ const { Column, ColumnGroup } = Table;
 const { Option } = Select;
 
 
-
 const playerColumns = [
   {
     title: 'Name',
@@ -114,6 +113,7 @@ class HomePage extends React.Component {
           <Table dataSource={this.state.playersResults} columns={playerColumns} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}/>
         </div>
 
+        {/* Teams table */}
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
           <h3>Teams</h3>
           <Table onRow={(record, rowIndex) => {
@@ -127,8 +127,9 @@ class HomePage extends React.Component {
                   <Column title="Home Arena" dataIndex="arena" key="arena" sorter= {(a, b) => a.arena > b.arena}/>
               </Table>
         </div>
-
-        <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
+        
+        {/* ---Games table--- */}
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
           <h3>Games</h3>
           <Select defaultValue="2021" style={{ width: 120 }} onChange={this.seasonOnChange}>
             <Option value="2021">2021</Option>
@@ -158,7 +159,6 @@ class HomePage extends React.Component {
                         <Column title="HomePts" dataIndex="PTS_home" key="PTS_home" sorter= {(a, b) => a.PTS_home > b.PTS_home }/>
                         <Column title="VisitorPts" dataIndex="PTS_away" key="PTS_away" sorter= {(a, b) => a.PTS_away > b.PTS_away}/>
                       </ColumnGroup>
-                      {/* TASK 6: create two columns (independent - not in a column group) for the date and time. Do not add a sorting functionality */}
                       <Column title="Date" dataIndex="Date" key="Date"/>
             </Table>
 

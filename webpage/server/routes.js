@@ -150,7 +150,7 @@ async function team(req, res){
     const Name = req.query.id ? req.query.id : 1610612748
 
     connection.query(`
-    SELECT team_id, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
+    SELECT team_id AS TeamId, nickname AS name, abbreviation AS abb, yearfounded AS year, arena
     FROM teams
     `, function (error, results, fields) {
 
@@ -163,6 +163,49 @@ async function team(req, res){
     });
 }
 
+async function team_players(req, res){
+    const id = req.query.id ? req.query.id : 1610612737
+
+    connection.query(`
+    SELECT team_id AS TeamId, nickname AS name, LOGO AS logo, CURRENT_PLAYER_1 as cp1, CURRENT_PLAYER_2 AS cp2, CURRENT_PLAYER_3 AS cp3, CURRENT_PLAYER_4 AS cp4, CURRENT_PLAYER_5 AS cp5, CURRENT_PLAYER_6 AS cp6, CURRENT_PLAYER_7 AS cp7, 
+    CURRENT_PLAYER_8 AS cp8, CURRENT_PLAYER_9 AS cp9, CURRENT_PLAYER_10 AS cp10, CURRENT_PLAYER_11 AS cp11, CURRENT_PLAYER_12 AS cp12, CURRENT_PLAYER_13 AS cp13, CURRENT_PLAYER_14 AS cp14, CURRENT_PLAYER_15 AS cp15, CURRENT_PLAYER_16 AS cp16, 
+    CURRENT_PLAYER_17 AS cp17, CURRENT_PLAYER_18 AS cp18, CONFERENCE_LOGO AS conf_logo
+    FROM teams
+    WHERE team_id = ${id}
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
+async function teams_conference(req, res){
+    const conf = req.query.conference ? req.query.conference : ""
+    const season = req.query.season ? req.query.season : 2021
+
+    connection.query(`
+    SELECT team_id AS TeamId, nickname, AVG(g.PTS_home) AS avg_pts_home, AVG(p.PTS_away) AS avg_pts_away
+    FROM teams
+    JOIN games g on teams.team_id = g.home_team_id
+    JOIN games p on teams.team_id = p.VISITOR_TEAM_ID
+    WHERE conference LIKE "%${conf}%"
+    AND g.season=${season}
+    AND p.season=${season}
+    GROUP BY TeamId;
+    `, function (error, results, fields) {
+
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
 
 /////////////////////////////////////////2022-11-12////////////////
 
@@ -208,21 +251,21 @@ async function playerInLeague(req, res){
 }
 
 /* TEAM PAGE */
-async function players_in_team(req, res){
-    const team_name = req.query.team_name
-    connection.query(`SELECT DISTINCT PLAYER_NAME FROM players P
-    JOIN teams T ON P.Team_ID = T.Team_ID
-    WHERE T.Nickname =  ${team_name};        
-    `, function (error, results, fields) {
+// async function players_in_team(req, res){
+//     const team_name = req.query.team_name
+//     connection.query(`SELECT DISTINCT PLAYER_NAME FROM players P
+//     JOIN teams T ON P.Team_ID = T.Team_ID
+//     WHERE T.Nickname =  ${team_name};        
+//     `, function (error, results, fields) {
 
-        if (error) {
-            console.log(error)
-            res.json({ error: error })
-        } else if (results) {
-            res.json({ results: results })
-        }
-    });
-}
+//         if (error) {
+//             console.log(error)
+//             res.json({ error: error })
+//         } else if (results) {
+//             res.json({ results: results })
+//         }
+//     });
+// }
 
 //---
 /* PLAYER PAGE */
@@ -687,7 +730,6 @@ module.exports = {
     playerInSeason,
     playerInLeague,
     games_details,
-    players_in_team,
     highest_win_players,
     player_in_game,
     top_8_teams,
@@ -696,7 +738,9 @@ module.exports = {
     all_games,
     all_teams,
     team,
-    game
+    game,
+    team_players,
+    teams_conference
 }
 
 
