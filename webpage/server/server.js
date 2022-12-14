@@ -12,6 +12,8 @@ const app = express();
 app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 
 app.get('/player', routes.player)
+//app.get('/player', routes.player)
+
 
 // app.get('/players_season/:season', routes.playerInSeason)
 

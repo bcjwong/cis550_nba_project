@@ -407,9 +407,49 @@ async function player_score_most(req, res){
 
 // Route 4 (handler)
 async function all_players(req, res) {
-    const season = req.query.season
+    const Name = req.query.Name ? req.query.Name : ""
+    const Season = req.query.Season ? req.query.Season : 2019
+    const Team_name = req.query.Team ? req.query.Team : ""
+    const page = req.query.page
+    const pagesize = req.query.pagesize ? req.query.pagesize : 10
 
-    connection.query(`Select * from Players where season=${season} `, function (error, results, fields) {
+    if (req.query.page && !isNaN(req.query.page)) {
+        const start = (page-1) * pagesize
+        connection.query(`
+        WITH p AS ( SELECT PLAYER_NAME AS Name, 
+            PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+                    FROM players p
+                    JOIN teams t on p.TEAM_ID = t.TEAM_ID
+                    WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
+                    )
+        SELECT p.Name, p.PLAYER_ID AS id, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
+        FROM games_details g
+        JOIN  p on g.PLAYER_ID = p.PLAYER_ID
+        GROUP BY p.SEASON, p.Name, p.Team, p.Season
+        ORDER BY p.Name
+        LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
+            
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        });
+   
+    } else {
+        // we have implemented this for you to see how to return results by querying the database
+        connection.query(`
+        WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+                    FROM players p
+                    JOIN teams t on p.TEAM_ID = t.TEAM_ID
+                    WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
+                    )
+        SELECT p.Name, p.PLAYER_ID AS id, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
+        FROM games_details g
+        JOIN  p on g.PLAYER_ID = p.PLAYER_ID
+        GROUP BY p.SEASON, p.Name, p.Team, p.Season
+        ORDER BY p.Name`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -418,7 +458,62 @@ async function all_players(req, res) {
                 res.json({ results: results })
             }
         });
+    }
 }
+// async function all_players(req, res) {
+//     const page = req.query.page
+//     const pagesize = req.query.pagesize ? req.query.pagesize : 10
+//     const Season = req.params.season ? req.params.season : 2021
+//     const Name = req.query.Name ? req.query.Name : ""
+//     const Team_name = req.query.Team ? req.query.Team : ""
+
+//     if (req.query.page && !isNaN(req.query.page)) {
+//         const start = (page-1) * pagesize
+//         connection.query(`
+
+//         WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+//             FROM players p
+//             JOIN teams t on p.TEAM_ID = t.TEAM_ID
+
+//             )
+//         SELECT p.Name, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
+//         FROM games_details g
+//         JOIN  p on g.PLAYER_ID = p.PLAYER_ID
+//         GROUP BY p.SEASON, p.Name, p.Team, p.Season
+//         ORDER BY p.Name
+//         LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
+            
+//             if (error) {
+//                 console.log(error)
+//                 res.json({ error: error })
+//             } else if (results) {
+//                 res.json({ results: results })
+//             }
+//         });
+   
+//     } else {
+//         // we have implemented this for you to see how to return results by querying the database
+//         connection.query(`
+//         WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+//             FROM players p
+//             JOIN teams t on p.TEAM_ID = t.TEAM_ID
+//             )
+//         SELECT p.Name, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
+//         FROM games_details g
+//         JOIN  p on g.PLAYER_ID = p.PLAYER_ID
+//         GROUP BY p.SEASON, p.Name, p.Team, p.Season
+//         ORDER BY p.Name`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({ error: error })
+//             } else if (results) {
+//                 res.json({ results: results })
+//             }
+//         });
+//     }
+
+// }
 
 
 // ********************************************
@@ -516,7 +611,8 @@ async function search_players(req, res) {
     if (req.query.page && !isNaN(req.query.page)) {
         const start = (page-1) * pagesize
         connection.query(`
-        WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
+        WITH p AS ( SELECT PLAYER_NAME AS Name, 
+            PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
                     FROM players p
                     JOIN teams t on p.TEAM_ID = t.TEAM_ID
                     WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
@@ -527,7 +623,7 @@ async function search_players(req, res) {
         GROUP BY p.SEASON, p.Name, p.Team, p.Season
         ORDER BY p.Name
         LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
-
+            
             if (error) {
                 console.log(error)
                 res.json({ error: error })
