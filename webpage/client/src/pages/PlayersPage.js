@@ -42,10 +42,10 @@ const playerColumns = [
         sorter: (a, b) => a.Season - b.Season
     },
     {
-        title: 'pts',
-        dataIndex: 'pts',
-        key: 'pts',
-        sorter: (a, b) => a.pts - b.pts
+        title: 'PTS',
+        dataIndex: 'PTS',
+        key: 'PTS',
+        sorter: (a, b) => a.PTS - b.PTS
     },
     {
         title: 'AST',
@@ -150,18 +150,6 @@ class PlayersPage extends React.Component {
 
                 </Form>
                 <Divider />
-                {/* <Table onRow={(record, rowIndex) => {
-                    return {
-                        onClick: event => {this.goToPlayer(record.PlayerName)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
-                    };
-                    }} dataSource={this.state.playersResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
-    
-                            <Column title="Name" dataIndex="Name" key="Name" sorter= {(a, b) => a.Name.localeCompare(b.Name)}/>
-                            <Column title="Team" dataIndex="Team" key="Team" sorter= {(a, b) => a.Team.localeCompare(b.Team)}/>
-                            <Column title="pts" dataIndex="pts" key="pts" sorter= {(a, b) => a.pts > b.pts }/>
-                            <Column title="pts" dataIndex="ats" key="ats" sorter= {(a, b) => a.ats > b.ats }/>
-                            <Column title="rbs" dataIndex="rbs" key="rbs" sorter= {(a, b) => a.rbs > b.rbs }/>
-                </Table> */}
                 <Table dataSource={this.state.playersResults} columns={playerColumns} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }} style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}/>
                 <Divider />
 
