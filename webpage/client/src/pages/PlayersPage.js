@@ -216,6 +216,7 @@ class PlayersPage extends React.Component {
                 <Divider />
 
                 {this.state.selectedPlayerDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
+                <h5>Player's Performance</h5>
                 <Table dataSource={this.state.selectedPlayerDetails} columns={getPlayerGameDetails} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }} style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}/>
                 </div> : null}
 
