@@ -679,7 +679,7 @@ async function search_matches(req, res) {
 // Route 8 (handler)
 async function search_players(req, res) {
     const Name = req.query.Name ? req.query.Name : ""
-    const Season = req.query.Season ? req.query.Season : ""
+    const Season = req.query.Season ? req.query.Season : 2019
     const Team_name = req.query.Team ? req.query.Team : ""
     const page = req.query.page
     const pagesize = req.query.pagesize ? req.query.pagesize : 10
@@ -696,10 +696,10 @@ async function search_players(req, res) {
                     JOIN teams t on p.TEAM_ID = t.TEAM_ID
                     WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
                     )
-        SELECT p.Name, p.Team, p.Season, AVG(g.PTS), AVG(g.AST), AVG(g.REB)
+        SELECT p.Name, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
         FROM games_details g
         JOIN  p on g.PLAYER_ID = p.PLAYER_ID
-        GROUP BY p.SEASON, p.PLAYER_NAME
+        GROUP BY p.SEASON, p.Name, p.Team, p.Season
         ORDER BY p.Name
         LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
 
@@ -719,10 +719,10 @@ async function search_players(req, res) {
                     JOIN teams t on p.TEAM_ID = t.TEAM_ID
                     WHERE PLAYER_NAME LIKE '%${Name}%' AND t.NICKNAME LIKE '%${Team_name}%' AND SEASON = ${Season}
                     )
-        SELECT p.Name, p.Team, p.Season, AVG(g.PTS), AVG(g.AST), AVG(g.REB)
+        SELECT p.Name, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
         FROM games_details g
         JOIN  p on g.PLAYER_ID = p.PLAYER_ID
-        GROUP BY p.SEASON, p.PLAYER_NAME
+        GROUP BY p.SEASON, p.Name, p.Team, p.Season
         ORDER BY p.Name`, function (error, results, fields) {
 
             if (error) {
