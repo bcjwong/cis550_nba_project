@@ -42,21 +42,21 @@ const playerColumns = [
         sorter: (a, b) => a.Season - b.Season
     },
     {
-        title: 'PTS',
-        dataIndex: 'PTS',
-        key: 'PTS',
-        sorter: (a, b) => a.PTS - b.PTS
+        title: 'AVG_PTS',
+        dataIndex: 'AVG_PTS',
+        key: 'AVG_PTS',
+        sorter: (a, b) => a.AVG_PTS - b.AVG_PTS
     },
     {
-        title: 'AST',
-        dataIndex: 'AST',
-        key: 'AST',
-        sorter: (a, b) => a.AST - b.AST
+        title: 'AVG_AST',
+        dataIndex: 'AVG_AST',
+        key: 'AVG_AST',
+        sorter: (a, b) => a.AVG_AST - b.AVG_AST
     },{
-        title: 'REB',
-        dataIndex: 'REB',
-        key: 'REB',
-        sorter: (a, b) => a.REB - b.REB
+        title: 'AVG_REB',
+        dataIndex: 'AVG_REB',
+        key: 'AVG_REB',
+        sorter: (a, b) => a.AVG_REB - b.AVG_REB
     },
 ];
 
@@ -144,7 +144,9 @@ class PlayersPage extends React.Component {
                             <label>Season</label>
                             <FormInput placeholder="Season" value={this.state.seasonQuery} onChange={this.handleSeasonQueryChange} />
                         </FormGroup></Col>
-
+                        <Col flex={2}><FormGroup style={{ width: '10vw' }}>
+                            <Button style={{ marginTop: '4vh' }} onClick={this.updateSearchResults}>Search</Button>
+                        </FormGroup></Col>
                     </Row>
 
 
