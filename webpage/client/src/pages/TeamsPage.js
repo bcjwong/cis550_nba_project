@@ -80,9 +80,7 @@ class TeamsPage extends React.Component {
 
                 {/* ---Teams table--- */}
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
-                <h7>Click on for details</h7>
                 <h3>Teams 2021 stats</h3>
-
                 <Select defaultValue="Conference" style={{ width: 120 }} onChange={this.conferenceOnChange}>
                     <Option value="EAST">East</Option>
                     <Option value="WEST">West</Option>
@@ -95,7 +93,7 @@ class TeamsPage extends React.Component {
                     };
                     }} dataSource={this.state.teamsConferenceResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                             {/* <ColumnGroup title="Teams"> */}
-                                <Column title="Team Name" dataIndex="nickname" key="nickname" sorter= {(a, b) => a.nickname.localeCompare(b.nickname)}/>
+                                <Column title="Team Name (click for details)" dataIndex="nickname" key="nickname" sorter= {(a, b) => a.nickname.localeCompare(b.nickname)}/>
                                 <Column title="Avg Pts as Home" dataIndex="avg_pts_home" key="avg_pts_home" sorter= {(a, b) => a.avg_pts_home.localeCompare(b.avg_pts_home)}/>
                                 <Column title="Avg Pts as Away" dataIndex="avg_pts_away" key="avg_pts_away" sorter= {(a, b) => a.avg_pts_away.localeCompare(b.avg_pts_away)}/>
                             {/* </ColumnGroup> */}
