@@ -249,66 +249,6 @@ async function player(req, res){
     }
 }
 
-// async function playerInSeason(req, res){
-//     const season = req.params.season ? req.params.season : 2021
-
-//     connection.query(`
-//     Select * from players 
-//     where season=${season}
-//     `, function (error, results, fields) {
-
-//         if (error) {
-//             console.log(error)
-//             res.json({ error: error })
-//         } else if (results) {
-//             res.json({ results: results })
-//         }
-//     });
-// }
-
-
-// async function playerInLeague(req, res){
-//     const league = req.query.league
-//     const position = req.query.position
-
-//     connection.query(`
-//     With team_league as (
-//         Select team_id from ranking
-//         Where league_id=${league}
-//     )
-//     Select player_id, player_name from games_details
-//     Where team_id in (select team_id from team_league)
-//     And start_position=${position}
-//     `, function (error, results, fields) {
-
-//         if (error) {
-//             console.log(error)
-//             res.json({ error: error })
-//         } else if (results) {
-//             res.json({ results: results })
-//         }
-//     });
-// }
-
-
-//---
-/* PLAYER PAGE */
-// async function highest_win_players(req, res){
-//     connection.query(`SELECT DISTINCT T.Team_id, T.Nickname, R.W_PCT, R.Season_ID FROM teams T
-//     JOIN ranking R ON T.TEAM_ID = R.TEAM_ID
-//     WHERE G IN (SELECT MAX(G) FROM ranking)
-//     ORDER BY R.W_PCT DESC
-//     LIMIT 10;
-//     `, function (error, results, fields) {
-
-//         if (error) {
-//             console.log(error)
-//             res.json({ error: error })
-//         } else if (results) {
-//             res.json({ results: results })
-//         }
-//     });
-// }
 
 async function player_in_game(req, res){
     const game_id = req.query.game_id ? req.query.game_id : 52000211
@@ -375,39 +315,6 @@ async function player_score_most(req, res){
         }
     });
 }
-
-/* PLAYER PAGE */
-// find the top 10 players who assist and score the most in history(this dataset)
-// async function player_score_most_in_history(req, res){
-//     connection.query(`with cte as (select PLAYER_ID, sum(AST) as total_ast
-//     from games_details
-//     group by PLAYER_ID
-//     order by sum(AST) DESC),
-//         cte1 as (select PLAYER_ID, sum(PTS) as total_ast
-//     from games_details
-//     group by PLAYER_ID
-//     order by sum(PTS) DESC)
-    
-//     select cte.PLAYER_ID from cte
-//     join cte1 on cte.PLAYER_ID = cte1.PLAYER_ID
-//     LIMIT 10;
-//     `, function (error, results, fields) {
-
-//         if (error) {
-//             console.log(error)
-//             res.json({ error: error })
-//         } else if (results) {
-//             res.json({ results: results })
-//         }
-//     });
-// }
-
-
-
-
-
-
-
 
 
 
