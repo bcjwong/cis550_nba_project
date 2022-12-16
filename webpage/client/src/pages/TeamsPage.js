@@ -106,9 +106,6 @@ class TeamsPage extends React.Component {
                 </Select>
 
                 <Table onRow={(record, rowIndex) => {
-                    return {
-                        onClick: event => {this.goToTeam(record.TeamId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
-                    };
                     }} dataSource={this.state.topTeamsResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                             {/* <ColumnGroup title="Teams"> */}
                             <Column title="Rank" dataIndex="rk" key="rk" sorter= {(a, b) => a.rk > b.rk }/>
