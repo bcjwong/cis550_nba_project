@@ -12,7 +12,7 @@ import {
 
 } from 'antd'
 
-import { getTeamPlayers, getConferenceTeams } from '../fetcher'
+import { getTeamPlayers, getConferenceTeams, getTopTeams } from '../fetcher'
 
 
 import MenuBar from '../components/MenuBar';
@@ -27,21 +27,24 @@ class TeamsPage extends React.Component {
         super(props)
         this.state = {
             conferenceQuery: "",
+            seasonQuery: 2021,
             gamesResults:[],
             teamsConferenceResults:[],
+            topTeamsResults:[],
 
             selectedTeamId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
             teamPlayersResults:null,
             
-            matchesPageNumber: 1,
-            matchesPageSize: 10,
-            pagination: null
+            // matchesPageNumber: 1,
+            // matchesPageSize: 10,
+            // pagination: null
       
           }
 
         this.conferenceOnChange = this.conferenceOnChange.bind(this)
         // this.goToPlayer = this.goToPlayer.bind(this)
         this.goToTeam = this.goToTeam.bind(this)
+        this.seasonOnChange = this.seasonOnChange.bind(this)
 
     }
 
@@ -50,14 +53,17 @@ class TeamsPage extends React.Component {
         window.location = `/teams?id=${teamId}`
     }
 
-    // goToPlayer(playerId) {
-    //     window.location = `/players?id=${teamId}`
-    // }
-
     // Conference change component
     conferenceOnChange(value) {
         getConferenceTeams(value).then(res=>{
         this.setState({ teamsConferenceResults: res.results })
+        })
+    }
+
+    // season on change for top 5 teams
+    seasonOnChange(value) {
+        getTopTeams(value).then(res=>{
+        this.setState({ topTeamsResults: res.results })
         })
     }
 
@@ -70,6 +76,12 @@ class TeamsPage extends React.Component {
         getTeamPlayers(this.state.selectedTeamId).then(res => {
         this.setState({ teamPlayersResults: res.results[0] })
         })
+
+        getTopTeams(this.state.seasonQuery).then(res=>{
+            this.setState({ topTeamsResults: res.results })
+            })
+
+
     }
 
 
@@ -77,6 +89,39 @@ class TeamsPage extends React.Component {
         return (
             <div>
                 <MenuBar />
+                <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
+                <h3>Team Rankings</h3>
+                <Select defaultValue="2021" style={{ width: 120 }} onChange={this.seasonOnChange}>
+                    <Option value="2021">2021</Option>
+                    <Option value="2020">2020</Option>
+                    <Option value="2019">2019</Option>
+                    <Option value="2018">2018</Option>
+                    <Option value="2017">2017</Option>
+                    <Option value="2016">2016</Option>
+                    <Option value="2015">2015</Option>
+                    <Option value="2014">2014</Option>
+                    <Option value="2013">2013</Option>
+                    <Option value="2012">2012</Option>
+                    <Option value="2011">2011</Option>
+                </Select>
+
+                <Table onRow={(record, rowIndex) => {
+                    return {
+                        onClick: event => {this.goToTeam(record.TeamId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
+                    };
+                    }} dataSource={this.state.topTeamsResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
+                            {/* <ColumnGroup title="Teams"> */}
+                            <Column title="Rank" dataIndex="rk" key="rk" sorter= {(a, b) => a.rk > b.rk }/>
+                            <Column title="Team" dataIndex="team" key="team" sorter= {(a, b) => a.team > b.team }/>
+                            <Column title="Games" dataIndex="G" key="G" sorter= {(a, b) => a.G > b.G }/>
+                            <Column title="Wins" dataIndex="W" key="W" sorter= {(a, b) => a.W > b.W }/>
+                            <Column title="Losses" dataIndex="L" key="L" sorter= {(a, b) => a.L > b.L }/>
+                            
+                            {/* </ColumnGroup> */}
+                    </Table>
+
+
+                </div>
 
                 {/* ---Teams table--- */}
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
@@ -94,8 +139,8 @@ class TeamsPage extends React.Component {
                     }} dataSource={this.state.teamsConferenceResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                             {/* <ColumnGroup title="Teams"> */}
                                 <Column title="Team Name (click for details)" dataIndex="nickname" key="nickname" sorter= {(a, b) => a.nickname.localeCompare(b.nickname)}/>
-                                <Column title="Avg Pts as Home" dataIndex="avg_pts_home" key="avg_pts_home" sorter= {(a, b) => a.avg_pts_home.localeCompare(b.avg_pts_home)}/>
-                                <Column title="Avg Pts as Away" dataIndex="avg_pts_away" key="avg_pts_away" sorter= {(a, b) => a.avg_pts_away.localeCompare(b.avg_pts_away)}/>
+                                <Column title="Average Pts as Home" dataIndex="avg_pts_home" key="avg_pts_home" sorter= {(a, b) => a.avg_pts_home > b.avg_pts_home }/>
+                                <Column title="Average Pts as Visitor" dataIndex="avg_pts_away" key="avg_pts_away" sorter= {(a, b) => a.avg_pts_away > b.avg_pts_away}/>
                             {/* </ColumnGroup> */}
                     </Table>
 
@@ -210,4 +255,3 @@ class TeamsPage extends React.Component {
 }
 
 export default TeamsPage
-

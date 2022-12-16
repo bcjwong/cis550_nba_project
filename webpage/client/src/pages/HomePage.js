@@ -141,7 +141,7 @@ class HomePage extends React.Component {
                   <Column title="Home Arena" dataIndex="arena" key="arena" sorter= {(a, b) => a.arena > b.arena}/>
               </Table>
         </div>
-        
+
         {/* ---Games table--- */}
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
           <h3>Games</h3>
@@ -157,7 +157,6 @@ class HomePage extends React.Component {
             <Option value="2013">2013</Option>
             <Option value="2012">2012</Option>
             <Option value="2011">2011</Option>
-            <Option value="2010">2010</Option>
           </Select>
           
           <Table onRow={(record, rowIndex) => {

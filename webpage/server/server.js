@@ -23,7 +23,7 @@ app.get('/player', routes.player)
 
 app.get('/player_in_game', routes.player_in_game)
 
-app.get('/top_teams', routes.top_8_teams)
+app.get('/top_teams', routes.top_5_teams)
 
 app.get('/player_score_most', routes.player_score_most)
 

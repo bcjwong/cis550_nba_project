@@ -85,7 +85,7 @@ class GamesPage extends React.Component {
         return (
             <div>
                 <MenuBar />
-                <Form style={{ width: '80vw', margin: '0 auto', marginTop: '5vh' }}>
+                <Form style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                     <Row>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
                             <label>Home Team</label>
@@ -108,7 +108,7 @@ class GamesPage extends React.Component {
 
                 </Form>
                 <Divider />
-                {/* TASK 12: Copy over your implementation of the games table from the home page */}
+                <Form style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                 <Table onRow={(record, rowIndex) => {
                     return {
                         onClick: event => {this.goToGame(record.GameId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
@@ -125,6 +125,7 @@ class GamesPage extends React.Component {
                             {/* TASK 6: create two columns (independent - not in a column group) for the date and time. Do not add a sorting functionality */}
                             <Column title="Date" dataIndex="Date" key="Date"/>
                     </Table>
+                </Form>
                 
                 <Divider />
                 {this.state.selectedGameDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>

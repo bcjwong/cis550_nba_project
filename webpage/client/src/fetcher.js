@@ -112,6 +112,13 @@ const getPlayerSearch = async (name, team, season) => {
     return res.json()
 }
 
+const getTopTeams = async (season) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/top_teams?season=${season}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
 // const getPlayerGameDetails = async (player_id ,page, pagesize) => {
 //     var res = await fetch(`http://${config.server_host}:${config.server_port}/search/players?player_id=${player_id}&page=${page}&pagesize=${pagesize}`, {
 //         method: 'GET',
@@ -149,5 +156,6 @@ export {
     getTeam,
     getTeamPlayers,
     getConferenceTeams,
+    getTopTeams,
     // getPlayerGameDetails
 }

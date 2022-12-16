@@ -330,14 +330,20 @@ async function player_in_game(req, res){
 }
 
 /* TEAMS PAGE */
-async function top_8_teams(req, res){
-    connection.query(`WITH TEMP AS (
-   SELECT season_id, team, MAX(G) as G, MAX(W) as W, MAX(L) as L FROM ranking
-   GROUP BY season_id, team
-   )
-   Select * from (
-       SELECT season_id, team, G, W, L, dense_rank() over (PARTITION BY Season_Id, team ORDER by G) as rk
-   from TEMP) a Where rk <= 8;
+async function top_5_teams(req, res){
+
+    const season = req.query.season ? req.query.season : 2021
+
+    connection.query(`
+    WITH TEMP AS (
+        SELECT season_id, team, MAX(G) as G, MAX(W) as W, MAX(L) as L FROM ranking
+        WHERE SEASON_ID = ${season}
+        GROUP BY season_id, team
+    )
+    Select rk, team, G, W, L, season_id AS season from (
+    SELECT dense_rank() over (PARTITION BY season_id ORDER by W DESC) as rk, team, G, W, L, season_id
+    from TEMP) a Where rk <= 5
+    LIMIT 5;
     `, function (error, results, fields) {
 
         if (error) {
@@ -670,7 +676,7 @@ module.exports = {
     games_details,
     // highest_win_players,
     player_in_game,
-    top_8_teams,
+    top_5_teams,
     player_score_most,
     // player_score_most_in_history,
     all_games,
@@ -680,7 +686,6 @@ module.exports = {
     team_players,
     teams_conference
 }
-
 
 
 
