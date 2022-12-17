@@ -11,7 +11,6 @@ import {
 
 } from 'antd'
 
-// import { getMatchSearch, getMatch } from '../fetcher'
 import { getGameSearch, getGame } from '../fetcher'
 
 
@@ -60,7 +59,6 @@ class GamesPage extends React.Component {
     }
 
     updateSearchResults() {
-        //TASK 11: call getMatchSearch and update matchesResults in state. See componentDidMount() for a hint
         getGameSearch(this.state.homeQuery, this.state.awayQuery, this.state.seasonQuery).then(res => {
             this.setState({ gamesResults: res.results })
             console.log(res.results)
@@ -85,7 +83,7 @@ class GamesPage extends React.Component {
         return (
             <div>
                 <MenuBar />
-                <Form style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
+                <Form style={{ width: '80vw', margin: '0 auto', marginTop: '2vh' }}>
                     <Row>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
                             <label>Home Team</label>
@@ -111,7 +109,7 @@ class GamesPage extends React.Component {
                 <Form style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
                 <Table onRow={(record, rowIndex) => {
                     return {
-                        onClick: event => {this.goToGame(record.GameId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
+                        onClick: event => {this.goToGame(record.GameId)},
                     };
                     }} dataSource={this.state.gamesResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                             <ColumnGroup title="Teams">
@@ -122,7 +120,6 @@ class GamesPage extends React.Component {
                                 <Column title="HomePts" dataIndex="PTS_home" key="PTS_home" sorter= {(a, b) => a.PTS_home > b.PTS_home }/>
                                 <Column title="VisitorPts" dataIndex="PTS_away" key="PTS_away" sorter= {(a, b) => a.PTS_away > b.PTS_away}/>
                             </ColumnGroup>
-                            {/* TASK 6: create two columns (independent - not in a column group) for the date and time. Do not add a sorting functionality */}
                             <Column title="Date" dataIndex="Date" key="Date"/>
                     </Table>
                 </Form>
@@ -138,8 +135,6 @@ class GamesPage extends React.Component {
                                 <Col flex={2} style={{ textAlign: 'center' }}>
                                     {this.state.selectedGameDetails.Date}
                                 </Col>
-                                {/* TASK 13: Add a column with flex = 2, and text alignment = right to display the name of the away team - similar to column 1 in this row */}
-
                                 <Col flex={2} style={{ textAlign: 'right' }}>
                                     <CardTitle>{this.state.selectedGameDetails.Visitor}</CardTitle>
                                 </Col>
@@ -152,13 +147,11 @@ class GamesPage extends React.Component {
                                 <Col span={6} style={{ textAlign: 'center' }}>
                                     Points
                                 </Col >
-                                {/* TASK 14: Add a column with span = 9, and text alignment = right to display the # of goals the away team scored - similar 1 in this row */}
 
                                 <Col span={9} style={{ textAlign: 'right' }}>
                                     <h3>{this.state.selectedGameDetails.PTS_away}</h3>
                                 </Col>
                             </Row>
-                            {/* TASK 15: create a row for goals at half time similar to the row for 'Goals' above, but use h5 in place of h3!  */}
                             <Row gutter='30' align='middle' justify='center'>
                                 <Col span={9} style={{ textAlign: 'left' }}>
                                     <h5>{this.state.selectedGameDetails.AST_home}</h5>
@@ -190,8 +183,6 @@ class GamesPage extends React.Component {
                                     FG Accuracy
                                 </Col >
                                 <Col span={9} style={{ textAlign: 'right' }}>
-                                    {/* TASK 18: add a progress bar to display the shot accuracy for the away team -  look at the progress bar in column 1 of this row for reference*/}
-                                    {/* <Progress value={this.state.selectedMatchDetails.ShotsOnTargetAway * 100 / this.state.selectedMatchDetails.ShotsAway}>{this.state.selectedMatchDetails.ShotsOnTargetAway} / {this.state.selectedMatchDetails.ShotsAway}</Progress> */}
                                     <Progress value={this.state.selectedGameDetails.FG_PCT_away * 100}>{this.state.selectedGameDetails.FG_PCT_away}</Progress>
                                 </Col>
                             </Row>
@@ -206,7 +197,6 @@ class GamesPage extends React.Component {
                                     <Progress value={this.state.selectedGameDetails.FG3_PCT_away * 100}>{this.state.selectedGameDetails.FG3_PCT_away}</Progress>
                                 </Col>
                             </Row>
-                            {/* TASK 16: add a row for fouls cards - check out the above lines for how we did it for corners */}
                             <Row gutter='30' align='middle' justify='center'>
                                 <Col span={9} style={{ textAlign: 'left' }}>
                                     <Progress value={this.state.selectedGameDetails.FT_PCT_home * 100}>{this.state.selectedGameDetails.FT_PCT_home}</Progress>

@@ -116,12 +116,12 @@ class HomePage extends React.Component {
     return (
       <div>
         <MenuBar />
-        {/* Teams table */}
+        {/* Players table */}
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
           <h3>Players</h3>
           <Table onRow={(record, rowIndex) => {
             return {
-              onClick: event => {this.goToPlayer(record.id)}, // clicking a row takes the user to a detailed view of the match in the /games page using the MatchId parameter  
+              onClick: event => {this.goToPlayer(record.id)}, 
             };
           }} dataSource={this.state.playersResults} columns={playerColumns} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}/>
                  
@@ -132,7 +132,7 @@ class HomePage extends React.Component {
           <h3>Teams</h3>
           <Table onRow={(record, rowIndex) => {
             return {
-              onClick: event => {this.goToTeam(record.TeamId)}, // clicking a row takes the user to a detailed view of the match in the /games page using the MatchId parameter  
+              onClick: event => {this.goToTeam(record.TeamId)}, 
             };
           }} dataSource={this.state.teamsResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                   <Column title="Name" dataIndex="name" key="name" sorter= {(a, b) => a.name.localeCompare(b.name)}/>

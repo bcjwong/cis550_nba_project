@@ -12,12 +12,7 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
-
-// 12/11/2022
-/* 
-***************************************  HOME PAGE  *************************************** 
-
-*/
+/* HOME PAGE */
 async function all_games(req, res) {
         const season = req.params.season ? req.params.season : 2021
 
@@ -25,9 +20,6 @@ async function all_games(req, res) {
         const pagesize = req.query.pagesize ? req.query.pagesize : 10
 
         if (req.query.page && !isNaN(req.query.page)) {
-            // This is the case where page is defined.
-            // The SQL schema has the attribute OverallRating, but modify it to match spec! 
-            // TODO: query and return results here:
             const start = (page-1) * pagesize
 
             connection.query(`
@@ -66,9 +58,8 @@ async function all_games(req, res) {
         }
 }
 
-/*  
-*************************************  game page *************************************  
-*/
+
+/* GAME PAGE */
 async function games_details(req, res){
     const home = req.query.home ? req.query.home : ""
     const visitor = req.query.visitor ? req.query.visitor : ""
@@ -93,9 +84,8 @@ async function games_details(req, res){
     });
 }
 
-// Route 5 (handler)
+/* GAME PAGE */
 async function game(req, res) {
-    // TODO: TASK 6: implement and test, potentially writing your own (ungraded) tests
     const id = req.query.id
     
     connection.query(`SELECT game_id AS GameId, game_date_est AS Date, t.NICKNAME as Home, PTS_home, p.NICKNAME as Visitor, PTS_away, 
@@ -113,12 +103,9 @@ async function game(req, res) {
         }
     });
    
-    // return res.json({error: "Not implemented"})
 }
 
-/* game page end */
-
-
+/* HOME PAGE */
 async function all_teams(req, res){
 
     connection.query(`
@@ -135,6 +122,7 @@ async function all_teams(req, res){
     });
 }
 
+/* TEAMS PAGE */
 async function team(req, res){
     const Name = req.query.id ? req.query.id : 1610612748
 
@@ -152,6 +140,7 @@ async function team(req, res){
     });
 }
 
+/* TEAMS PAGE */
 async function team_players(req, res){
     const id = req.query.id ? req.query.id : 1610612737
 
@@ -172,6 +161,7 @@ async function team_players(req, res){
     });
 }
 
+/* TEAMS PAGE */
 async function teams_conference(req, res){
     const conf = req.query.conference ? req.query.conference : ""
     const season = req.query.season ? req.query.season : 2021
@@ -196,11 +186,7 @@ async function teams_conference(req, res){
     });
 }
 
-/////////////////////////////////////////2022-11-12////////////////
-/*
-************************************ Player Page **************************************
-*/
-
+/* PLAYERS PAGE */
 async function player(req, res){
     const id = req.query.id
     const page = req.query.page
@@ -228,7 +214,6 @@ async function player(req, res){
         });
    
     } else {
-        // we have implemented this for you to see how to return results by querying the database
         connection.query(`
         WITH g AS (SELECT games.SEASON, games.GAME_DATE_EST, gd.PLAYER_ID, gd.MIN, gd.FG3_PCT, gd.FG_PCT, gd.FT_PCT, gd.PTS, gd.AST, gd.REB
                 FROM games
@@ -249,7 +234,7 @@ async function player(req, res){
     }
 }
 
-
+/* PLAYERS PAGE */
 async function player_in_game(req, res){
     const game_id = req.query.game_id ? req.query.game_id : 52000211
     connection.query(`WITH G AS (SELECT games_details.PLAYER_ID
@@ -296,7 +281,6 @@ async function top_5_teams(req, res){
 }
 
 /* PLAYER PAGE */
-// Find the player who scores the most in each season 
 async function player_score_most(req, res){
     connection.query(`SELECT MAX(total_point), Season, player_id from (
    SELECT Sum(PTS) as total_point, Season, player_id from
@@ -318,7 +302,8 @@ async function player_score_most(req, res){
 
 
 
-// Route 4 (handler)
+
+/* HOME PAGE */
 async function all_players(req, res) {
     const Name = req.query.Name ? req.query.Name : ""
     const Season = req.query.Season ? req.query.Season : 2019
@@ -351,7 +336,6 @@ async function all_players(req, res) {
         });
    
     } else {
-        // we have implemented this for you to see how to return results by querying the database
         connection.query(`
         WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
                     FROM players p
@@ -373,147 +357,10 @@ async function all_players(req, res) {
         });
     }
 }
-// async function all_players(req, res) {
-//     const page = req.query.page
-//     const pagesize = req.query.pagesize ? req.query.pagesize : 10
-//     const Season = req.params.season ? req.params.season : 2021
-//     const Name = req.query.Name ? req.query.Name : ""
-//     const Team_name = req.query.Team ? req.query.Team : ""
-
-//     if (req.query.page && !isNaN(req.query.page)) {
-//         const start = (page-1) * pagesize
-//         connection.query(`
-
-//         WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
-//             FROM players p
-//             JOIN teams t on p.TEAM_ID = t.TEAM_ID
-
-//             )
-//         SELECT p.Name, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
-//         FROM games_details g
-//         JOIN  p on g.PLAYER_ID = p.PLAYER_ID
-//         GROUP BY p.SEASON, p.Name, p.Team, p.Season
-//         ORDER BY p.Name
-//         LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
-            
-//             if (error) {
-//                 console.log(error)
-//                 res.json({ error: error })
-//             } else if (results) {
-//                 res.json({ results: results })
-//             }
-//         });
-   
-//     } else {
-//         // we have implemented this for you to see how to return results by querying the database
-//         connection.query(`
-//         WITH p AS ( SELECT PLAYER_NAME AS Name, PLAYER_ID, t.NICKNAME AS Team, SEASON AS Season
-//             FROM players p
-//             JOIN teams t on p.TEAM_ID = t.TEAM_ID
-//             )
-//         SELECT p.Name, p.Team, p.Season, AVG(g.PTS) AS AVG_PTS, AVG(g.AST) AS AVG_AST, AVG(g.REB) AS AVG_REB
-//         FROM games_details g
-//         JOIN  p on g.PLAYER_ID = p.PLAYER_ID
-//         GROUP BY p.SEASON, p.Name, p.Team, p.Season
-//         ORDER BY p.Name`, function (error, results, fields) {
-
-//             if (error) {
-//                 console.log(error)
-//                 res.json({ error: error })
-//             } else if (results) {
-//                 res.json({ results: results })
-//             }
-//         });
-//     }
-
-// }
-
-
-// ********************************************
-//             MATCH-SPECIFIC ROUTES
-// ********************************************
-
-// Route 5 (handler)
-// async function match(req, res) {
-//     // TODO: TASK 6: implement and test, potentially writing your own (ungraded) tests
-//     const id = req.query.id
-    
-//     // This is the case where page is defined.
-//     // The SQL schema has the attribute OverallRating, but modify it to match spec! 
-//     // TODO: query and return results here:
-//     connection.query(`SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, 
-//                     FullTimeGoalsA AS AwayGoals, HalfTimeGoalsH AS HTHomeGoals, HalfTimeGoalsA AS HTAwayGoals,
-//                     ShotsH AS ShotsHome, ShotsA AS ShotsAway, ShotsOnTargetH AS ShotsOnTargetHome, ShotsOnTargetA AS ShotsOnTargetAway,
-//                     FoulsH AS FoulsHome, FoulsA AS FoulsAway, CornersH AS CornersHome, CornersA AS CornersAway, YellowCardsH AS YCHome,
-//                     YellowCardsA AS YCAway, RedCardsH AS RCHome, RedCardsA AS RCAway
-//     FROM Matches
-//     WHERE MatchId = ${id}`, function (error, results, fields) {
-
-//         if (error) {
-//             console.log(error)
-//             res.json({ error: error })
-//         } else if (results) {
-//             res.json({ results: results })
-//         }
-//     });
-   
-//     // return res.json({error: "Not implemented"})
-// }
 
 
 
-// ********************************************
-//             SEARCH ROUTES
-// ********************************************
-
-// Route 7 (handler)
-// async function search_matches(req, res) {
-//     // TODO: TASK 8: implement and test, potentially writing your own (ungraded) tests
-//     // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
-//     const Home = req.query.Home ? req.query.Home : ""
-//     const Away = req.query.Away ? req.query.Away : ""
-//     const page = req.query.page
-//     const pagesize = req.query.pagesize ? req.query.pagesize : 10
-
-//     if (req.query.page && !isNaN(req.query.page)) {
-//         const start = (page-1) * pagesize
-//         connection.query(`SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals,
-//                         FullTimeGoalsA AS AwayGoals
-//         FROM Matches
-//         WHERE HomeTeam LIKE '%${Home}%' and AwayTeam LIKE '%${Away}%'
-//         ORDER BY Home, Away
-//         LIMIT ${pagesize} OFFSET ${start}`, function (error, results, fields) {
-
-//             if (error) {
-//                 console.log(error)
-//                 res.json({ error: error })
-//             } else if (results) {
-//                 res.json({ results: results })
-//             }
-//         });
-   
-//     } else {
-//         // we have implemented this for you to see how to return results by querying the database
-//         connection.query(`SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals,
-//                         FullTimeGoalsA AS AwayGoals
-//         FROM Matches
-//         WHERE HomeTeam LIKE '%${Home}%' and AwayTeam LIKE '%${Away}%'
-//         ORDER BY Home, Away`, function (error, results, fields) {
-
-//             if (error) {
-//                 console.log(error)
-//                 res.json({ error: error })
-//             } else if (results) {
-//                 res.json({ results: results })
-//             }
-//         });
-//     }
-//     // return res.json({error: "Not implemented"})
-
-
-// }
-
-// Route 8 (handler)
+/* PLAYERS PAGE */
 async function search_players(req, res) {
     const Name = req.query.Name ? req.query.Name : ""
     const Season = req.query.Season ? req.query.Season : 2019
@@ -570,22 +417,13 @@ async function search_players(req, res) {
 }
 
 module.exports = {
-    // hello,
-    // jersey,
-    // all_matches,
     all_players,
-    // match,
-    // search_matches,
     search_players,
     player,
-    // playerInSeason,
-    // playerInLeague,
     games_details,
-    // highest_win_players,
     player_in_game,
     top_5_teams,
     player_score_most,
-    // player_score_most_in_history,
     all_games,
     all_teams,
     team,

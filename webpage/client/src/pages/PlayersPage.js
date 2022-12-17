@@ -151,12 +151,10 @@ class PlayersPage extends React.Component {
     }
 
     handleSeasonQueryChange(event) {
-        // TASK 20: update state variables appropriately. See handleNameQueryChange(event) for reference
         this.setState({ seasonQuery: event.target.value })
     }
 
     handleTeamQueryChange(event) {
-        // TASK 21: update state variables appropriately. See handleNameQueryChange(event) for reference
         this.setState({ teamQuery: event.target.value })
     }
 
@@ -165,7 +163,6 @@ class PlayersPage extends React.Component {
     }
 
     updateSearchResults() {
-        //TASK 23: call getPlayerSearch and update playerResults in state. See componentDidMount() for a hint
         getPlayerSearch(this.state.nameQuery, this.state.teamQuery, this.state.seasonQuery, null, null).then(res => {
             this.setState({ playersResults: res.results })
         })
@@ -176,8 +173,6 @@ class PlayersPage extends React.Component {
             this.setState({ playersResults: res.results })
         })
 
-        // TASK 25: call getPlayer with the appropriate parameter and set update the correct state variable. 
-        // See the usage of getMatch in the componentDidMount method of MatchesPage for a hint! 
         getPlayer(this.state.selectedPlayerId, null, null).then(res => {
             this.setState({ selectedPlayerDetails: res.results })        
         })
@@ -199,7 +194,6 @@ class PlayersPage extends React.Component {
                             <label>Team Name</label>
                             <FormInput placeholder="Team" value={this.state.teamQuery} onChange={this.handleTeamQueryChange} />
                         </FormGroup></Col>
-                        {/* TASK 26: Create a column for Club, using the elements and style we followed in the above two columns. Use the onChange method (handleClubQueryChange)  */}
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
                             <label>Season</label>
                             <FormInput placeholder="Season" value={this.state.seasonQuery} onChange={this.handleSeasonQueryChange} />

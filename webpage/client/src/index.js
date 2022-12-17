@@ -8,7 +8,6 @@ import {
 
 import HomePage from './pages/HomePage';
 import PlayersPage from './pages/PlayersPage';
-// import MatchesPage from './pages/MatchesPage';
 import TeamsPage from './pages/TeamsPage';
 import GamesPage from './pages/GamesPage';
 import 'antd/dist/antd.css';

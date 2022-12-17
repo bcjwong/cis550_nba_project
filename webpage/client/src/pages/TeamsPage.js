@@ -35,14 +35,9 @@ class TeamsPage extends React.Component {
             selectedTeamId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
             teamPlayersResults:null,
             
-            // matchesPageNumber: 1,
-            // matchesPageSize: 10,
-            // pagination: null
-      
           }
 
         this.conferenceOnChange = this.conferenceOnChange.bind(this)
-        // this.goToPlayer = this.goToPlayer.bind(this)
         this.goToTeam = this.goToTeam.bind(this)
         this.seasonOnChange = this.seasonOnChange.bind(this)
 
@@ -89,6 +84,7 @@ class TeamsPage extends React.Component {
         return (
             <div>
                 <MenuBar />
+                {/* Teams Ranking Table */}
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}> 
                 <h3>Team Rankings</h3>
                 <Select defaultValue="2021" style={{ width: 120 }} onChange={this.seasonOnChange}>
@@ -131,7 +127,7 @@ class TeamsPage extends React.Component {
                 
                 <Table onRow={(record, rowIndex) => {
                     return {
-                        onClick: event => {this.goToTeam(record.TeamId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
+                        onClick: event => {this.goToTeam(record.TeamId)},  
                     };
                     }} dataSource={this.state.teamsConferenceResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
                             {/* <ColumnGroup title="Teams"> */}
