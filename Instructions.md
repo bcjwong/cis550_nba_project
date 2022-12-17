@@ -159,5 +159,17 @@ CREATE TABLE games_details(
 
 Using the DataGrip import wizard, import games.csv into the games table, players.csv into the players table, ranking.csv into the ranking table, games_details_complete.csv into the games_details table, teams.csv into teams table
 
+## Starting up the project locally
+**Server**
+- cd into the server folder
+- make sure npm version is 8.19.2
+- run "npm start"
+
+**Client**
+- cd into client folder
+- make sure npm version is 6.14.13
+- make sure nvm is version 14.17.1 by running "nvm use 14.17.1"
+- run "npm start"
+
 
 **When importing the files, ensure that the `First row is header` option is checked, or you will run into errors** 
