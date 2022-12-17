@@ -56,13 +56,6 @@ const getConferenceTeams = async (conference, season) => {
     return res.json()
 }
 
-const getAllMatches = async (page, pagesize, league) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/matches/${league}?page=${page}&pagesize=${pagesize}`, {
-        method: 'GET',
-    })
-    return res.json()
-}
-
 const getAllPlayers = async (page, pagesize) => {
     var res = await fetch(`http://${config.server_host}:${config.server_port}/players?page=${page}&pagesize=${pagesize}`, {
         method: 'GET',
@@ -70,22 +63,8 @@ const getAllPlayers = async (page, pagesize) => {
     return res.json()
 }
 
-const getMatch = async (id) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/match?id=${id}`, {
-        method: 'GET',
-    })
-    return res.json()
-}
-
 const getPlayer = async (id) => {
     var res = await fetch(`http://${config.server_host}:${config.server_port}/player?id=${id}`, {
-        method: 'GET',
-    })
-    return res.json()
-}
-
-const getMatchSearch = async (home, away, page, pagesize) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/search/matches?Home=${home}&Away=${away}&page=${page}&pagesize=${pagesize}`, {
         method: 'GET',
     })
     return res.json()
@@ -109,11 +88,8 @@ const getTopTeams = async (season) => {
 
 
 export {
-    getAllMatches,
     getAllPlayers,
-    getMatch,
     getPlayer,
-    getMatchSearch,
     getPlayerSearch,
     getAllGames,
     getAllTeams,

@@ -234,26 +234,6 @@ async function player(req, res){
     }
 }
 
-/* PLAYERS PAGE */
-async function player_in_game(req, res){
-    const game_id = req.query.game_id ? req.query.game_id : 52000211
-    connection.query(`WITH G AS (SELECT games_details.PLAYER_ID
-            FROM games
-            JOIN games_details
-            ON games.game_id = games_details.game_id
-            WHERE games.game_id = ${game_id})
-        SELECT *
-        FROM players P
-        JOIN G ON P.PLAYER_ID = G.PLAYER_ID;`, function (error, results, fields) {
-        if (error) {
-            console.log(error)
-            res.json({ error: error })
-        } else if (results) {
-            res.json({ results: results })
-        }
-    });
-}
-
 /* TEAMS PAGE */
 async function top_5_teams(req, res){
 
@@ -279,29 +259,6 @@ async function top_5_teams(req, res){
         }
     });
 }
-
-/* PLAYER PAGE */
-async function player_score_most(req, res){
-    connection.query(`SELECT MAX(total_point), Season, player_id from (
-   SELECT Sum(PTS) as total_point, Season, player_id from
-       (SELECT player_id, PTS, Season
-        From games_details
-        Left join games on games_details.game_id =games.game_id) temp
-        group by Season, player_id) temp1
-    group by Season, player_id;
-    `, function (error, results, fields) {
-
-        if (error) {
-            console.log(error)
-            res.json({ error: error })
-        } else if (results) {
-            res.json({ results: results })
-        }
-    });
-}
-
-
-
 
 /* HOME PAGE */
 async function all_players(req, res) {
@@ -421,9 +378,7 @@ module.exports = {
     search_players,
     player,
     games_details,
-    player_in_game,
     top_5_teams,
-    player_score_most,
     all_games,
     all_teams,
     team,
@@ -431,7 +386,6 @@ module.exports = {
     team_players,
     teams_conference
 }
-
 
 
 
